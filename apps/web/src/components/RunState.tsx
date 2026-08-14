@@ -1,21 +1,75 @@
-export function EmptyState({ onStart, starting }: { onStart: () => void; starting: boolean }) {
+export interface IngestedCandidateDraft {
+  candidateId: string;
+  repoUrl: string;
+  ref: string;
+}
+
+export function EmptyState({
+  onStart,
+  starting,
+  candidateDraft,
+  onCandidateDraftChange,
+}: {
+  onStart: () => void;
+  starting: boolean;
+  candidateDraft: IngestedCandidateDraft;
+  onCandidateDraftChange: (field: keyof IngestedCandidateDraft, value: string) => void;
+}) {
   return (
     <section className="empty-sheet" aria-labelledby="empty-title">
       <div>
-        <p className="eyebrow">No evaluation in progress</p>
-        <h2 id="empty-title">Compare all three candidates with the legacy service.</h2>
+        <p className="eyebrow">Ready for ingest</p>
+        <h2 id="empty-title">Ingest a rewrite and watch every target run.</h2>
         <p>
-          Start a run to create one matching environment for each target. IntentGuard will replay
-          the recovered boundary cases, run the security checks, and prepare the results for review.
+          IntentGuard opens one execution lane for the legacy service and each candidate. Every
+          lane advances from allocation to policy as its recorded events arrive.
         </p>
       </div>
       <ol>
-        <li><span>01</span> Lock the recovered rules and source commits.</li>
-        <li><span>02</span> Run the same boundary cases in four matching sandboxes.</li>
-        <li><span>03</span> Review the policy result and approve the evidence record.</li>
+        <li><span>01</span> Recover and lock the behavior contract.</li>
+        <li><span>02</span> Start four matching execution lanes.</li>
+        <li><span>03</span> Resolve each lane from recorded evidence.</li>
       </ol>
+
+      <div className="ingest-block">
+        <p className="eyebrow">Candidate ingest</p>
+        <div className="form-grid">
+          <label>
+            Candidate label
+            <input
+              value={candidateDraft.candidateId}
+              onChange={(event) => onCandidateDraftChange("candidateId", event.target.value)}
+              placeholder="D"
+              disabled={starting}
+            />
+          </label>
+          <label>
+            Git repository URL
+            <input
+              value={candidateDraft.repoUrl}
+              onChange={(event) => onCandidateDraftChange("repoUrl", event.target.value)}
+              placeholder="https://github.com/org/rewrite.git"
+              disabled={starting}
+            />
+          </label>
+          <label>
+            Branch or commit
+            <input
+              value={candidateDraft.ref}
+              onChange={(event) => onCandidateDraftChange("ref", event.target.value)}
+              placeholder="main"
+              disabled={starting}
+            />
+          </label>
+        </div>
+        <small>
+          Leave these fields blank to run the standard candidate set. A submitted repository is
+          passed to the execution service when live ingest is enabled.
+        </small>
+      </div>
+
       <button className="primary-action" type="button" onClick={onStart} disabled={starting}>
-        {starting ? "Starting evaluation…" : "Evaluate candidates"}
+        {starting ? "Opening execution lanes..." : "Ingest and start run"}
       </button>
     </section>
   );

@@ -2,6 +2,7 @@ import { z } from "zod";
 import type {
   ApproveRequest,
   ApproveResponse,
+  IngestedCandidate,
   RunEvent,
   RunEventType,
 } from "../types";
@@ -18,7 +19,7 @@ export interface SubscriptionCallbacks {
 }
 
 export interface RunAdapter {
-  createRun(): Promise<RunCreated>;
+  createRun(candidates?: IngestedCandidate[]): Promise<RunCreated>;
   subscribe(runId: string, callbacks: SubscriptionCallbacks): () => void;
   approve(runId: string, submission: ApproveRequest): Promise<ApproveResponse>;
 }
@@ -163,10 +164,14 @@ function subscribeToRun(
 class ApiRunAdapter implements RunAdapter {
   constructor(private readonly baseUrl: string) {}
 
-  async createRun(): Promise<RunCreated> {
+  async createRun(candidates?: IngestedCandidate[]): Promise<RunCreated> {
+    const hasCandidates = candidates !== undefined && candidates.length > 0;
     const response = await fetch(urlFor(this.baseUrl, "/api/runs"), {
       method: "POST",
-      headers: { Accept: "application/json" },
+      headers: hasCandidates
+        ? { "Content-Type": "application/json", Accept: "application/json" }
+        : { Accept: "application/json" },
+      ...(hasCandidates ? { body: JSON.stringify({ candidates }) } : {}),
     });
     return runCreatedSchema.parse(await jsonFrom(response, "Starting evaluation"));
   }
@@ -193,13 +198,13 @@ class LiveMockRunAdapter implements RunAdapter {
 
   constructor(private readonly baseUrl: string) {}
 
-  async createRun(): Promise<RunCreated> {
+  async createRun(_candidates?: IngestedCandidate[]): Promise<RunCreated> {
     this.runCounter += 1;
     return { runId: `RUN-WEB-MOCK-${String(this.runCounter).padStart(3, "0")}` };
   }
 
   subscribe(runId: string, callbacks: SubscriptionCallbacks): () => void {
-    return subscribeToRun(this.baseUrl, runId, "?speed=6", callbacks);
+    return subscribeToRun(this.baseUrl, runId, "?speed=1", callbacks);
   }
 
   async approve(runId: string, _submission: ApproveRequest): Promise<ApproveResponse> {

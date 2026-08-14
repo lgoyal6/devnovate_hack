@@ -30,6 +30,13 @@ export type RunEvent = Omit<CanonicalRunEvent, "type"> & { type: string };
 
 export type ModernCandidateId = "A" | "B" | "C";
 
+/** Sent to the control API today; ignored until execution accepts arbitrary sources. */
+export interface IngestedCandidate {
+  candidateId: string;
+  repoUrl: string;
+  ref: string;
+}
+
 export interface DiffPart {
   text: string;
   different: boolean;

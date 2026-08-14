@@ -1,35 +1,33 @@
-const proofFacts = [
-  { label: "Recovered intent", value: "14 locked rules" },
-  { label: "Recorded behavior", value: "84 boundary checks" },
-  { label: "Candidates", value: "3 isolated rewrites" },
-  { label: "Decision source", value: "Execution, not opinion" },
+const proofStats = [
+  { value: "84", label: "boundary checks", detail: "Legacy output compared directly" },
+  { value: "4", label: "isolated environments", detail: "Built from one snapshot" },
+  { value: "3", label: "security scans", detail: "One result per candidate" },
+  { value: "1", label: "review record", detail: "Evidence preserved for approval" },
 ] as const;
 
 const methodSteps = [
   {
     number: "01",
-    title: "Recover the business rules",
-    body: "Forge reads the legacy service, extracts its business rules, and identifies the inputs most likely to reveal a behavioral change.",
-    output: "Rules locked",
+    title: "Recover what production does",
+    body: "Forge turns legacy behavior into explicit business rules and boundary inputs.",
   },
   {
     number: "02",
-    title: "Run the same inputs",
-    body: "The legacy service and each candidate process the same inputs in separate environments built from the same snapshot.",
-    output: "Results recorded",
+    title: "Run every target the same way",
+    body: "The legacy service and each rewrite process the same inputs in matching environments.",
   },
   {
     number: "03",
-    title: "Compare the recorded results",
-    body: "IntentGuard compares outputs, security findings, and environment state. The verdict comes from those results, not from a model's opinion.",
-    output: "Policy evaluated",
+    title: "Approve from the record",
+    body: "IntentGuard compares outputs and security results, then gives a reviewer the complete decision record.",
   },
-  {
-    number: "04",
-    title: "Review the complete record",
-    body: "The final record includes the selected candidate, the rejected candidates, the rules, the scan results, and the raw outputs used in the decision.",
-    output: "Human approval",
-  },
+] as const;
+
+const evidenceSources = [
+  { source: "Forge", evidence: "Recovered rules" },
+  { source: "Daytona", evidence: "Isolated executions" },
+  { source: "Snyk", evidence: "Security findings" },
+  { source: "Control", evidence: "Policy and approval" },
 ] as const;
 
 export function LandingPage() {
@@ -42,179 +40,159 @@ export function LandingPage() {
           <span className="brand-mark" aria-hidden="true">IG</span>
           <span>
             <strong>IntentGuard</strong>
-          <small>Behavior verification for software rewrites</small>
+            <small>Behavior verification for software rewrites</small>
           </span>
         </a>
-        <nav className="landing-nav" aria-label="Primary navigation">
-          <a href="#why">Why verify</a>
-          <a href="#method">How it works</a>
-          <a href="#evidence">Who decides</a>
-        </nav>
-        <a className="landing-header-action" href="/dashboard">
-          <span className="landing-header-action-label">Open control room</span>
-        </a>
+        <p className="landing-header-note">Execution decides / a reviewer approves</p>
       </header>
 
       <main className="landing-main" id="landing-main">
         <section className="landing-hero" aria-labelledby="landing-title">
           <div className="landing-hero-copy">
-            <p className="eyebrow">Software modernization / behavior verification</p>
+            <p className="eyebrow">Legacy rewrite verification</p>
             <h1 id="landing-title">
-              Verify the rewrite against
-              <span>the system it replaces.</span>
+              Ship the rewrite that
+              <span>behaves like production.</span>
             </h1>
             <p className="landing-lead">
-              IntentGuard runs the legacy service and every rewrite against the same business-rule
-              tests. It records the results, flags any differences, and shows which candidate is
-              ready for human review.
+              IntentGuard runs your legacy service and every rewrite against the same recovered
+              business rules. You see exactly what changed, which candidates are safe, and the
+              evidence behind the decision.
             </p>
-            <div className="landing-actions">
-              <a className="landing-primary-action" href="/dashboard">View a sample run</a>
-              <a className="landing-text-action" href="#method">How verification works</a>
-            </div>
-            <p className="landing-quiet-proof">
-              <span aria-hidden="true" /> Real executions only. If an environment fails, the result is inconclusive.
-            </p>
+            <a className="landing-primary-action" href="/dashboard">
+              Review a verified run
+              <span aria-hidden="true">01</span>
+            </a>
+            <ul className="landing-assurance" aria-label="Verification guarantees">
+              <li>Recorded executions</li>
+              <li>Matching environments</li>
+              <li>Human approval</li>
+            </ul>
           </div>
 
-          <div className="proof-window" aria-label="Example IntentGuard behavior comparison">
-            <div className="proof-window-header">
+          <figure className="landing-product-visual" aria-labelledby="product-visual-title">
+            <figcaption>
+              <span id="product-visual-title">Product view / candidate review</span>
+              <code>RUN-WEB-MOCK-001</code>
+            </figcaption>
+
+            <div className="product-verdict-strip">
               <div>
-                <span>Recorded execution workspace</span>
-                <strong>Refund approval service</strong>
+                <span>Policy result</span>
+                <strong>Recommend Candidate A</strong>
               </div>
-              <span className="proof-run-state">Run complete</span>
+              <span className="product-run-state">Ready for review</span>
             </div>
 
-            <div className="proof-window-body">
-              <div className="proof-candidates" aria-label="Candidate outcomes">
-                <div className="proof-candidate" data-state="eligible">
-                  <div><strong>Candidate A</strong><span>Eligible</span></div>
-                  <small>84 behavior matches / security clean</small>
-                  <span className="proof-meter"><i /><i /><i /></span>
-                </div>
-                <div className="proof-candidate" data-state="blocked">
-                  <div><strong>Candidate B</strong><span>Blocked</span></div>
-                  <small>Critical command-injection risk</small>
-                  <span className="proof-meter"><i /><i /><i /></span>
-                </div>
-                <div className="proof-candidate" data-state="blocked">
-                  <div><strong>Candidate C</strong><span>Blocked</span></div>
-                  <small>Two legacy behaviors changed</small>
-                  <span className="proof-meter"><i /><i /><i /></span>
-                </div>
-              </div>
-
-              <div className="proof-comparison">
-                <p><span>Selected boundary</span>Refund exactly $50.00 as an agent.</p>
-                <div>
-                  <span>Original service</span>
-                  <strong>Approved / fee $2.50</strong>
-                  <code>{'{ "status": 200, "approved": true }'}</code>
-                </div>
-                <div className="proof-match"><strong>Same result</strong><span>Behavior preserved</span></div>
-                <div>
+            <div className="product-review-grid">
+              <div className="product-candidate-list" aria-label="Candidate outcomes">
+                <div data-result="eligible">
                   <span>Candidate A</span>
-                  <strong>Approved / fee $2.50</strong>
-                  <code>{'{ "status": 200, "approved": true }'}</code>
+                  <strong>Eligible</strong>
+                  <small>84 matches / security clean</small>
+                </div>
+                <div data-result="blocked">
+                  <span>Candidate B</span>
+                  <strong>Blocked</strong>
+                  <small>Critical security finding</small>
+                </div>
+                <div data-result="blocked">
+                  <span>Candidate C</span>
+                  <strong>Blocked</strong>
+                  <small>Legacy behavior changed</small>
+                </div>
+              </div>
+
+              <div className="product-comparison">
+                <div className="product-comparison-heading">
+                  <span>Boundary check / REQ-014</span>
+                  <strong>Refund at the manager threshold</strong>
+                </div>
+                <div className="product-output-grid">
+                  <div>
+                    <span>Legacy service</span>
+                    <strong>Manager review required</strong>
+                    <code>approved: false</code>
+                  </div>
+                  <div>
+                    <span>Candidate A</span>
+                    <strong>Manager review required</strong>
+                    <code>approved: false</code>
+                  </div>
+                </div>
+                <div className="product-match-row">
+                  <span>Recorded result</span>
+                  <strong>Behavior preserved</strong>
                 </div>
               </div>
             </div>
 
-            <div className="proof-chain" aria-label="Evidence chain">
-              <span data-done="true">Rules</span>
-              <span data-done="true">Corpus</span>
-              <span data-done="true">Results</span>
-              <span data-done="true">Scans</span>
-              <span data-current="true">Approval</span>
+            <div className="product-evidence-chain" aria-label="Evidence chain">
+              <span data-complete="true">Rules locked</span>
+              <span data-complete="true">Inputs replayed</span>
+              <span data-complete="true">Scans complete</span>
+              <span data-current="true">Review ready</span>
             </div>
+          </figure>
+        </section>
+
+        <section className="landing-proof" aria-labelledby="proof-title">
+          <div className="landing-proof-heading">
+            <p className="eyebrow">Trust the record, not the pitch</p>
+            <h2 id="proof-title">One decision, backed by evidence you can inspect.</h2>
+            <p>
+              Every recommendation links back to the rules, environments, outputs, and findings
+              that produced it. Environment failures remain visible and never become synthetic passes.
+            </p>
+          </div>
+
+          <dl className="landing-proof-stats" aria-label="Sample verification record">
+            {proofStats.map((stat) => (
+              <div key={stat.label}>
+                <dt><strong>{stat.value}</strong> {stat.label}</dt>
+                <dd>{stat.detail}</dd>
+              </div>
+            ))}
+          </dl>
+
+          <div className="landing-source-strip" aria-label="Evidence sources">
+            <span>Evidence sources</span>
+            {evidenceSources.map((item) => (
+              <div key={item.source}>
+                <strong>{item.source}</strong>
+                <small>{item.evidence}</small>
+              </div>
+            ))}
           </div>
         </section>
 
-        <dl className="landing-fact-rail" aria-label="Example run facts">
-          {proofFacts.map((fact) => (
-            <div key={fact.label}>
-              <dt>{fact.label}</dt>
-              <dd>{fact.value}</dd>
-            </div>
-          ))}
-        </dl>
-
-        <section className="landing-tension" id="why" aria-labelledby="why-title">
-          <div className="landing-section-index" aria-hidden="true">01 / THE RISK</div>
-          <div className="landing-tension-title">
-            <p className="eyebrow">Why existing tests are not enough</p>
-            <h2 id="why-title">Most rewrite failures happen at the boundaries.</h2>
-          </div>
-          <div className="landing-tension-copy">
-            <p>
-              Legacy systems often contain behavior that was never documented: a fee applied at one
-              exact threshold, an exception for a specific role, or a response field used by another
-              service. A rewrite can pass its normal test suite and still change one of these details.
-            </p>
-            <p>
-              IntentGuard makes those behaviors explicit and tests them directly. A candidate only
-              passes when its recorded output matches the legacy service and its security checks are clean.
-            </p>
-          </div>
-          <div className="boundary-register" aria-label="Example recovered boundary cases">
-            <div><code>RULE 007</code><span>Amount equals approval limit</span><strong>Must match</strong></div>
-            <div><code>RULE 011</code><span>Agent refund incurs fee</span><strong>Must match</strong></div>
-            <div><code>RULE 014</code><span>Duplicate request is idempotent</span><strong>Must match</strong></div>
-          </div>
-        </section>
-
-        <section className="landing-method" id="method" aria-labelledby="method-title">
+        <section className="landing-method" aria-labelledby="method-title">
           <div className="landing-method-intro">
             <div>
-              <p className="eyebrow">How verification works</p>
-              <h2 id="method-title">Every candidate goes through the same review.</h2>
+              <p className="eyebrow">From source code to approval</p>
+              <h2 id="method-title">A repeatable review, not a model opinion.</h2>
             </div>
             <p>
-              Each run follows the same sequence. IntentGuard locks the recovered rules, executes each
-              target, compares the results, and applies the policy. The model can explain the record,
-              but it cannot change the verdict.
+              The model can recover rules and explain results. It cannot vote on pass or fail.
+              Recorded execution and policy determine the result.
             </p>
           </div>
-          <ol className="method-list">
+
+          <ol className="landing-method-steps">
             {methodSteps.map((step) => (
               <li key={step.number}>
-                <span className="method-number">{step.number}</span>
+                <span>{step.number}</span>
                 <h3>{step.title}</h3>
                 <p>{step.body}</p>
-                <code>{step.output}</code>
               </li>
             ))}
           </ol>
-        </section>
-
-        <section className="landing-evidence" id="evidence" aria-labelledby="evidence-title">
-          <div className="evidence-statement">
-            <p className="eyebrow">Who makes the decision</p>
-            <h2 id="evidence-title"><span>Recorded results decide.</span> A person approves.</h2>
-            <p>
-              The model helps recover business rules and explain the evidence. Pass or fail is determined
-              by the recorded executions. A reviewer sees the complete record before approving a candidate.
-            </p>
-          </div>
-          <div className="authority-record" aria-label="IntentGuard authority boundaries">
-            <div><span>Model</span><strong>Find rules and explain results</strong><small>Does not vote</small></div>
-            <div><span>Execution</span><strong>Run checks and apply policy</strong><small>Determines the result</small></div>
-            <div><span>Reviewer</span><strong>Review the record and approve</strong><small>Makes the final call</small></div>
-          </div>
-        </section>
-
-        <section className="landing-final" aria-labelledby="final-title">
-          <p className="eyebrow">Review a complete run</p>
-          <h2 id="final-title">See how each candidate performed.</h2>
-          <p>Open the control room to review the comparisons, security findings, and final policy result.</p>
-          <a className="landing-primary-action" href="/dashboard">Open the control room</a>
         </section>
       </main>
 
       <footer className="landing-footer">
         <span>INTENTGUARD / BEHAVIOR VERIFICATION FOR SOFTWARE REWRITES</span>
-        <span>RECORDED RESULTS DETERMINE THE VERDICT / A REVIEWER APPROVES</span>
+        <span>RECORDED EXECUTION / POLICY RESULT / HUMAN APPROVAL</span>
       </footer>
     </div>
   );

@@ -80,7 +80,7 @@ describe("live run adapters", () => {
     });
 
     const stream = FakeEventSource.latest;
-    expect(stream?.url).toContain(`/api/runs/${created.runId}/events?speed=6`);
+    expect(stream?.url).toContain(`/api/runs/${created.runId}/events?speed=1`);
     expect(stream?.registered("SANDBOX_CREATED")).toBe(true);
     expect(stream?.registered("GATE_RESULT")).toBe(true);
     expect(stream?.registered("message")).toBe(true);
@@ -306,6 +306,31 @@ describe("live run adapters", () => {
       message: "Late duplicate.",
     });
     expect(events).toHaveLength(2);
+  });
+
+  it("sends an ingested candidate in the run creation body, and sends no body without one", async () => {
+    const fetchMock = vi.fn<typeof fetch>(() =>
+      Promise.resolve(new Response(JSON.stringify({ runId: "RUN-API-002" }), { status: 200 }))
+    );
+    vi.stubGlobal("fetch", fetchMock);
+    const adapter = createRunAdapter({
+      VITE_INTENTGUARD_DATA_MODE: "api",
+      VITE_INTENTGUARD_API_BASE_URL: "",
+    });
+
+    await adapter.createRun();
+    expect(fetchMock.mock.calls[0]?.[1]?.body).toBeUndefined();
+
+    await adapter.createRun([
+      { candidateId: "D", repoUrl: "https://example.com/rewrite.git", ref: "main" },
+    ]);
+    expect(fetchMock.mock.calls[1]?.[1]?.body).toBe(JSON.stringify({
+      candidates: [{ candidateId: "D", repoUrl: "https://example.com/rewrite.git", ref: "main" }],
+    }));
+    expect(fetchMock.mock.calls[1]?.[1]?.headers).toEqual({
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    });
   });
 
   it("rejects a malformed real API approval digest", async () => {
