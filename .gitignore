@@ -56,3 +56,11 @@ Thumbs.db
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Build-time-only owner briefs and design handoff files
+/brief-bryan.md
+/brief-laksh.md
+/brief-neel.md
+/intentguard-shared-contracts.md
+/intentguard-preview-desktop.png
+/intentguard-preview-mobile.png
