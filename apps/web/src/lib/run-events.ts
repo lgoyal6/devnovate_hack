@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type {
   ApprovalRecord,
+  DiffPart,
   GateResult,
   LedgerRow,
   LedgerValue,
@@ -138,10 +139,51 @@ function normalizeGate(parsed: z.infer<typeof gateSchema>): GateResult {
   return gate;
 }
 
-function rawValue(result: RawResult): LedgerValue {
-  const encodedBody = JSON.stringify(result.body) ?? String(result.body);
-  const summary = `${result.status} ${encodedBody}`;
-  return { summary, parts: [{ text: summary, different: true }] };
+function flattenFields(value: unknown, prefix = ""): Map<string, string> {
+  const fields = new Map<string, string>();
+  if (value !== null && typeof value === "object") {
+    const entries = Array.isArray(value)
+      ? value.map((item, index): [string, unknown] => [`[${index}]`, item])
+      : Object.entries(value as Record<string, unknown>).map(
+          ([key, item]): [string, unknown] => [`.${key}`, item],
+        );
+    if (entries.length === 0) fields.set(prefix || "(root)", Array.isArray(value) ? "[]" : "{}");
+    for (const [suffix, item] of entries) {
+      for (const [path, text] of flattenFields(item, `${prefix}${suffix}`)) fields.set(path, text);
+    }
+  } else {
+    fields.set(prefix || "(root)", JSON.stringify(value) ?? String(value));
+  }
+  return fields;
+}
+
+function fieldParts(own: Map<string, string>, other: Map<string, string>): DiffPart[] {
+  return [...own].map(([path, text], index) => ({
+    text: `${index === 0 ? "" : ", "}${path}: ${text}`,
+    different: other.get(path) !== text,
+  }));
+}
+
+function diffResults(legacy: RawResult, candidate: RawResult): { legacy: LedgerValue; candidate: LedgerValue } {
+  const legacyFields = flattenFields(legacy.body);
+  const candidateFields = flattenFields(candidate.body);
+  const statusDifferent = legacy.status !== candidate.status;
+  return {
+    legacy: {
+      summary: `${legacy.status} ${JSON.stringify(legacy.body)}`,
+      parts: [
+        { text: `${legacy.status} `, different: statusDifferent },
+        ...fieldParts(legacyFields, candidateFields),
+      ],
+    },
+    candidate: {
+      summary: `${candidate.status} ${JSON.stringify(candidate.body)}`,
+      parts: [
+        { text: `${candidate.status} `, different: statusDifferent },
+        ...fieldParts(candidateFields, legacyFields),
+      ],
+    },
+  };
 }
 
 export function parseRunEvent(value: unknown): RunEvent {
@@ -163,8 +205,10 @@ export function deriveRunView(events: readonly RunEvent[]): RunView {
     inputId: string;
     ruleId: string;
     message: string;
+    seq: number;
   }>();
   const gates = new Map<string, GateResult>();
+  const gateSeq = new Map<string, number>();
   const scans = new Map<string, ScanResult>();
   const presentationErrors: PresentationError[] = [];
   let verdict: Verdict | undefined;
@@ -201,6 +245,7 @@ export function deriveRunView(events: readonly RunEvent[]): RunView {
           inputId: result.data.inputId,
           ruleId: result.data.ruleId,
           message: event.message,
+          seq: event.seq,
         });
       }
     }
@@ -209,7 +254,9 @@ export function deriveRunView(events: readonly RunEvent[]): RunView {
       const result = gateSchema.safeParse(event.payload);
       if (result.success) {
         const gate = normalizeGate(result.data);
-        gates.set(`${gate.candidateId}:${gate.key}:${gate.inputId ?? "all"}`, gate);
+        const key = `${gate.candidateId}:${gate.key}:${gate.inputId ?? "all"}`;
+        gates.set(key, gate);
+        gateSeq.set(key, event.seq);
       } else presentationErrors.push(payloadError(event, result.error));
     }
 
@@ -238,15 +285,15 @@ export function deriveRunView(events: readonly RunEvent[]): RunView {
     }
 
     if (event.type === "TORN_DOWN") {
+      activeSandboxIds.clear();
       const result = teardownSchema.safeParse(event.payload);
-      if (result.success) activeSandboxIds.clear();
-      else presentationErrors.push(payloadError(event, result.error));
+      if (!result.success) presentationErrors.push(payloadError(event, result.error));
     }
   }
 
-  const ledgerRows: LedgerRow[] = [];
+  const unorderedRows: { row: LedgerRow; seq: number }[] = [];
   const consumedDivergences = new Set<string>();
-  for (const gate of gates.values()) {
+  for (const [gateKey, gate] of gates) {
     if (gate.category !== "behavior") continue;
     const directDivergence = gate.inputId === undefined
       ? undefined
@@ -269,7 +316,7 @@ export function deriveRunView(events: readonly RunEvent[]): RunView {
       && candidateResult !== undefined;
     const row: LedgerRow = {
       id: `${gate.candidateId}:${gate.key}:${evidenceInputId ?? "gate"}`,
-      order: ledgerRows.length + 1,
+      order: 0,
       candidateId: gate.candidateId,
       ruleId: gate.ruleId ?? gate.key,
       probe: evidenceInputId ?? "Gate-level result",
@@ -279,11 +326,12 @@ export function deriveRunView(events: readonly RunEvent[]): RunView {
     };
     if (evidenceInputId !== undefined) row.inputId = evidenceInputId;
     if (hasRawPair) {
-      row.legacy = rawValue(legacyResult);
-      row.candidate = rawValue(candidateResult);
+      const diff = diffResults(legacyResult, candidateResult);
+      row.legacy = diff.legacy;
+      row.candidate = diff.candidate;
     }
     if (divergenceKey !== undefined) consumedDivergences.add(divergenceKey);
-    ledgerRows.push(row);
+    unorderedRows.push({ row, seq: gateSeq.get(gateKey) ?? 0 });
   }
 
   for (const [key, divergence] of divergences) {
@@ -293,7 +341,7 @@ export function deriveRunView(events: readonly RunEvent[]): RunView {
     const hasRawPair = legacyResult !== undefined && candidateResult !== undefined;
     const row: LedgerRow = {
       id: `${divergence.candidateId}:${divergence.ruleId}:${divergence.inputId}`,
-      order: ledgerRows.length + 1,
+      order: 0,
       candidateId: divergence.candidateId,
       inputId: divergence.inputId,
       ruleId: divergence.ruleId,
@@ -303,11 +351,18 @@ export function deriveRunView(events: readonly RunEvent[]): RunView {
       evidenceKind: hasRawPair ? "raw" : "gate",
     };
     if (hasRawPair) {
-      row.legacy = rawValue(legacyResult);
-      row.candidate = rawValue(candidateResult);
+      const diff = diffResults(legacyResult, candidateResult);
+      row.legacy = diff.legacy;
+      row.candidate = diff.candidate;
     }
-    ledgerRows.push(row);
+    unorderedRows.push({ row, seq: divergence.seq });
   }
+
+  unorderedRows.sort((left, right) => left.seq - right.seq);
+  const ledgerRows: LedgerRow[] = unorderedRows.map(({ row }, index) => {
+    row.order = index + 1;
+    return row;
+  });
 
   const view: RunView = {
     sandboxes: [...sandboxes.values()],

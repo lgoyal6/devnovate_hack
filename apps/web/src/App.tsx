@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { LandingPage } from "./LandingPage";
 import { ReconciliationLedger } from "./components/ReconciliationLedger";
 import { RunTimeline } from "./components/RunTimeline";
 import { SandboxRegister } from "./components/SandboxRegister";
@@ -40,7 +41,7 @@ function runStatusLabel(
   return "EVALUATING";
 }
 
-export default function App() {
+function DashboardPage() {
   const [appState, setAppState] = useState<AppState>("idle");
   const [runId, setRunId] = useState("");
   const [events, setEvents] = useState<RunEvent[]>([]);
@@ -48,6 +49,7 @@ export default function App() {
   const [errorMessage, setErrorMessage] = useState("");
   const unsubscribeRef = useRef<(() => void) | undefined>(undefined);
   const runGenerationRef = useRef(0);
+  const manualCandidateSelectionRef = useRef(false);
 
   const orderedEvents = useMemo(() => sortRunEvents(events), [events]);
   const view = useMemo(() => deriveRunView(orderedEvents), [orderedEvents]);
@@ -75,6 +77,7 @@ export default function App() {
     setEvents([]);
     setRunId("");
     setSelectedCandidate("A");
+    manualCandidateSelectionRef.current = false;
 
     try {
       const created = await runAdapter.createRun();
@@ -84,7 +87,11 @@ export default function App() {
       unsubscribeRef.current = runAdapter.subscribe(created.runId, {
         onEvent: (event) => {
           if (generation !== runGenerationRef.current) return;
-          if (event.type === "DIVERGENCE_FOUND" && isModernCandidate(event.candidateId)) {
+          if (
+            event.type === "DIVERGENCE_FOUND"
+            && isModernCandidate(event.candidateId)
+            && !manualCandidateSelectionRef.current
+          ) {
             setSelectedCandidate(event.candidateId);
           }
           setEvents((current) => [...current, event]);
@@ -111,6 +118,11 @@ export default function App() {
   );
 
   const hasRun = appState !== "idle" && runId !== "";
+
+  const selectCandidate = useCallback((candidateId: ModernCandidateId) => {
+    manualCandidateSelectionRef.current = true;
+    setSelectedCandidate(candidateId);
+  }, []);
 
   return (
     <div className="app-shell">
@@ -161,7 +173,7 @@ export default function App() {
         <ReconciliationLedger
           key={runId}
           selectedCandidate={selectedCandidate}
-          onSelectCandidate={setSelectedCandidate}
+          onSelectCandidate={selectCandidate}
           view={view}
           hasRun={hasRun}
         />
@@ -193,4 +205,8 @@ export default function App() {
       </footer>
     </div>
   );
+}
+
+export default function App() {
+  return window.location.pathname.startsWith("/dashboard") ? <DashboardPage /> : <LandingPage />;
 }

@@ -64,6 +64,7 @@ beforeEach(() => {
 });
 
 afterEach(() => vi.unstubAllGlobals());
+afterEach(() => vi.useRealTimers());
 
 describe("live run adapters", () => {
   it("waits for a verdict when teardown arrives first", async () => {
@@ -178,6 +179,23 @@ describe("live run adapters", () => {
     stream?.emit("error", { message: "mock stream fixture failed" });
     expect(errors[0]?.message).toContain("mock stream fixture failed");
     expect(stream?.closed).toBe(true);
+  });
+
+  it("warns when a dropped connection stays down instead of failing silently", async () => {
+    const adapter = createRunAdapter(mockConfig);
+    const { runId } = await adapter.createRun();
+    const errors: Error[] = [];
+    adapter.subscribe(runId, { onEvent: () => undefined, onError: (error) => errors.push(error) });
+    const stream = FakeEventSource.latest;
+
+    vi.useFakeTimers();
+    stream?.emitTransportError();
+    expect(errors).toEqual([]);
+    expect(stream?.closed).toBe(false);
+
+    vi.advanceTimersByTime(8000);
+    expect(errors[0]?.message).toContain("Retrying");
+    expect(stream?.closed).toBe(false);
   });
 
   it("reads the automatic mock approval digest from the run snapshot", async () => {

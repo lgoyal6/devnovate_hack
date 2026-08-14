@@ -74,6 +74,20 @@ function subscribeToRun(
   const listeners = new Map<string, EventListener>();
   let verdictObserved = false;
   let teardownObserved = false;
+  let staleConnectionTimer: ReturnType<typeof setTimeout> | undefined;
+
+  const STALE_CONNECTION_WARNING_MS = 8000;
+
+  const clearStaleConnectionTimer = () => {
+    if (staleConnectionTimer === undefined) return;
+    clearTimeout(staleConnectionTimer);
+    staleConnectionTimer = undefined;
+  };
+
+  const closeStream = () => {
+    clearStaleConnectionTimer();
+    stream.close();
+  };
 
   const handleRunEvent = (message: MessageEvent<string>) => {
     try {
@@ -82,11 +96,11 @@ function subscribeToRun(
       if (event.type === "VERDICT_READY") verdictObserved = true;
       if (event.type === "TORN_DOWN") teardownObserved = true;
       callbacks.onEvent(event);
-      if (verdictObserved && teardownObserved) stream.close();
+      if (verdictObserved && teardownObserved) closeStream();
     } catch (error: unknown) {
       const detail = error instanceof Error ? error.message : String(error);
       callbacks.onError(new Error(`Run event could not be read: ${detail}`));
-      stream.close();
+      closeStream();
     }
   };
 
@@ -101,6 +115,9 @@ function subscribeToRun(
 
   for (const eventType of RUN_EVENT_TYPES) registerRunEvent(eventType);
   registerRunEvent("message");
+
+  const onStreamOpen: EventListener = () => clearStaleConnectionTimer();
+  stream.addEventListener("open", onStreamOpen);
 
   const onStreamError: EventListener = (event) => {
     if (event instanceof MessageEvent) {
@@ -117,20 +134,29 @@ function subscribeToRun(
         if (!(error instanceof SyntaxError)) detail = String(error);
       }
       callbacks.onError(new Error(`Control stream reported an error: ${detail}`));
-      stream.close();
+      closeStream();
       return;
     }
     if (stream.readyState === EventSource.CLOSED) {
       callbacks.onError(new Error("The run event stream closed before teardown."));
+      return;
     }
-    // CONNECTING is transient. Native EventSource reconnection remains active.
+    // CONNECTING is transient: native EventSource reconnection stays active.
+    // Warn the reviewer if the connection stays down instead of failing silently.
+    if (staleConnectionTimer === undefined) {
+      staleConnectionTimer = setTimeout(() => {
+        staleConnectionTimer = undefined;
+        callbacks.onError(new Error("Connection to the control stream was lost. Retrying..."));
+      }, STALE_CONNECTION_WARNING_MS);
+    }
   };
   stream.addEventListener("error", onStreamError);
 
   return () => {
     for (const [name, listener] of listeners) stream.removeEventListener(name, listener);
     stream.removeEventListener("error", onStreamError);
-    stream.close();
+    stream.removeEventListener("open", onStreamOpen);
+    closeStream();
   };
 }
 

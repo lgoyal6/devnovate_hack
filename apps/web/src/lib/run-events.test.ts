@@ -195,4 +195,47 @@ describe("canonical run event presentation model", () => {
     expect(deriveRunView([malformed]).presentationErrors[0]?.eventType)
       .toBe("SANDBOX_CREATED");
   });
+
+  it("orders ledger rows by originating event seq, not by construction pass", () => {
+    const events: RunEvent[] = [
+      event(1, "DIVERGENCE_FOUND", { ruleId: "REQ-99", inputId: "IN-99", blocking: true }, "B"),
+      event(2, "GATE_RESULT", {
+        candidateId: "A",
+        key: "behavior.REQ-1",
+        category: "behavior",
+        ruleId: "REQ-1",
+        status: "PASS",
+        detail: "matched legacy",
+      }, "A"),
+    ];
+    const view = deriveRunView(events);
+    expect(view.ledgerRows.map((row) => row.candidateId)).toEqual(["B", "A"]);
+    expect(view.ledgerRows.map((row) => row.order)).toEqual([1, 2]);
+  });
+
+  it("clears live sandboxes on TORN_DOWN even when the payload fails validation", () => {
+    const events: RunEvent[] = [
+      event(1, "SANDBOX_CREATED", {
+        candidateId: "A",
+        sandboxId: "dt-a-001",
+        snapshotId: "snap-1",
+        commitSha: "abc123",
+        previewUrl: "https://a.preview.example",
+        createdAt: TS,
+      }, "A"),
+      event(2, "TORN_DOWN", { bogus: true }),
+    ];
+    const view = deriveRunView(events);
+    expect(view.activeSandboxIds.size).toBe(0);
+    expect(view.presentationErrors[0]?.eventType).toBe("TORN_DOWN");
+  });
+
+  it("only marks the fields that actually differ, not the whole response", () => {
+    const view = deriveRunView(canonicalEvents());
+    const divergence = view.ledgerRows.find((row) => row.candidateId === "C");
+    const amountPart = divergence?.legacy?.parts.find((part) => part.text.includes(".amount"));
+    const approvedPart = divergence?.legacy?.parts.find((part) => part.text.includes(".approved:"));
+    expect(amountPart?.different).toBe(false);
+    expect(approvedPart?.different).toBe(true);
+  });
 });
