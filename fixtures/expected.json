@@ -1,0 +1,557 @@
+{
+  "schemaVersion": 1,
+  "method": "POST",
+  "path": "/refunds/approve",
+  "cases": [
+    {
+      "id": "amount-499-99",
+      "payload": {
+        "refund_id": "refund-499-99",
+        "amount": "499.99",
+        "actor": "bryan",
+        "roles": [],
+        "requested_at": "2026-08-13T12:00:00Z"
+      },
+      "expected": {
+        "legacy": {
+          "status": 200,
+          "body": {
+            "refund_id": "refund-499-99",
+            "requested_amount": "499.99",
+            "effective_amount": "499.99",
+            "approved": true,
+            "reason": "approved",
+            "required_role": null,
+            "role_check_skipped": false,
+            "audit": {
+              "actor": "bryan",
+              "action": "refund.approved",
+              "refund_id": "refund-499-99",
+              "timestamp": "2026-08-13T12:00:00Z"
+            }
+          }
+        },
+        "A": {
+          "status": 200,
+          "body": {
+            "refund_id": "refund-499-99",
+            "requested_amount": "499.99",
+            "effective_amount": "499.99",
+            "approved": true,
+            "reason": "approved",
+            "required_role": null,
+            "role_check_skipped": false,
+            "audit": {
+              "actor": "bryan",
+              "action": "refund.approved",
+              "refund_id": "refund-499-99",
+              "timestamp": "2026-08-13T12:00:00Z"
+            }
+          }
+        },
+        "B": {
+          "status": 200,
+          "body": {
+            "refund_id": "refund-499-99",
+            "requested_amount": "499.99",
+            "effective_amount": "499.99",
+            "approved": true,
+            "reason": "approved",
+            "required_role": null,
+            "role_check_skipped": false,
+            "audit": {
+              "actor": "bryan",
+              "action": "refund.approved",
+              "refund_id": "refund-499-99",
+              "timestamp": "2026-08-13T12:00:00Z"
+            }
+          }
+        },
+        "C": {
+          "status": 200,
+          "body": {
+            "refund_id": "refund-499-99",
+            "requested_amount": "499.99",
+            "effective_amount": "499.99",
+            "approved": true,
+            "reason": "approved",
+            "required_role": null,
+            "role_check_skipped": false,
+            "audit": {
+              "actor": "bryan",
+              "action": "refund.approved",
+              "refund_id": "refund-499-99",
+              "timestamp": "2026-08-13T12:00:00Z"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "amount-500-00",
+      "payload": {
+        "refund_id": "refund-500-00",
+        "amount": "500.00",
+        "actor": "bryan",
+        "roles": [],
+        "requested_at": "2026-08-13T12:00:00Z"
+      },
+      "expected": {
+        "legacy": {
+          "status": 200,
+          "body": {
+            "refund_id": "refund-500-00",
+            "requested_amount": "500.00",
+            "effective_amount": "500.00",
+            "approved": true,
+            "reason": "approved",
+            "required_role": null,
+            "role_check_skipped": false,
+            "audit": {
+              "actor": "bryan",
+              "action": "refund.approved",
+              "refund_id": "refund-500-00",
+              "timestamp": "2026-08-13T12:00:00Z"
+            }
+          }
+        },
+        "A": {
+          "status": 200,
+          "body": {
+            "refund_id": "refund-500-00",
+            "requested_amount": "500.00",
+            "effective_amount": "500.00",
+            "approved": true,
+            "reason": "approved",
+            "required_role": null,
+            "role_check_skipped": false,
+            "audit": {
+              "actor": "bryan",
+              "action": "refund.approved",
+              "refund_id": "refund-500-00",
+              "timestamp": "2026-08-13T12:00:00Z"
+            }
+          }
+        },
+        "B": {
+          "status": 200,
+          "body": {
+            "refund_id": "refund-500-00",
+            "requested_amount": "500.00",
+            "effective_amount": "500.00",
+            "approved": true,
+            "reason": "approved",
+            "required_role": null,
+            "role_check_skipped": false,
+            "audit": {
+              "actor": "bryan",
+              "action": "refund.approved",
+              "refund_id": "refund-500-00",
+              "timestamp": "2026-08-13T12:00:00Z"
+            }
+          }
+        },
+        "C": {
+          "status": 200,
+          "body": {
+            "refund_id": "refund-500-00",
+            "requested_amount": "500.00",
+            "effective_amount": "500.00",
+            "approved": true,
+            "reason": "approved",
+            "required_role": null,
+            "role_check_skipped": false,
+            "audit": {
+              "actor": "bryan",
+              "action": "refund.approved",
+              "refund_id": "refund-500-00",
+              "timestamp": "2026-08-13T12:00:00Z"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "amount-500-49",
+      "payload": {
+        "refund_id": "refund-500-49",
+        "amount": "500.49",
+        "actor": "bryan",
+        "roles": [],
+        "requested_at": "2026-08-13T12:00:00Z"
+      },
+      "expected": {
+        "legacy": {
+          "status": 200,
+          "body": {
+            "refund_id": "refund-500-49",
+            "requested_amount": "500.49",
+            "effective_amount": "500.49",
+            "approved": true,
+            "reason": "approved",
+            "required_role": null,
+            "role_check_skipped": false,
+            "audit": {
+              "actor": "bryan",
+              "action": "refund.approved",
+              "refund_id": "refund-500-49",
+              "timestamp": "2026-08-13T12:00:00Z"
+            }
+          }
+        },
+        "A": {
+          "status": 403,
+          "body": {
+            "refund_id": "refund-500-49",
+            "requested_amount": "500.49",
+            "effective_amount": "500.49",
+            "approved": false,
+            "reason": "finance_admin_required",
+            "required_role": "finance_admin",
+            "role_check_skipped": false,
+            "audit": null
+          }
+        },
+        "B": {
+          "status": 200,
+          "body": {
+            "refund_id": "refund-500-49",
+            "requested_amount": "500.49",
+            "effective_amount": "500.49",
+            "approved": true,
+            "reason": "approved",
+            "required_role": null,
+            "role_check_skipped": false,
+            "audit": {
+              "actor": "bryan",
+              "action": "refund.approved",
+              "refund_id": "refund-500-49",
+              "timestamp": "2026-08-13T12:00:00Z"
+            }
+          }
+        },
+        "C": {
+          "status": 200,
+          "body": {
+            "refund_id": "refund-500-49",
+            "requested_amount": "500.49",
+            "effective_amount": "500.49",
+            "approved": true,
+            "reason": "approved",
+            "required_role": null,
+            "role_check_skipped": false,
+            "audit": {
+              "actor": "bryan",
+              "action": "refund.approved",
+              "refund_id": "refund-500-49",
+              "timestamp": "2026-08-13T12:00:00Z"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "amount-500-99",
+      "payload": {
+        "refund_id": "refund-500-99",
+        "amount": "500.99",
+        "actor": "bryan",
+        "roles": [],
+        "requested_at": "2026-08-13T12:00:00Z"
+      },
+      "expected": {
+        "legacy": {
+          "status": 200,
+          "body": {
+            "refund_id": "refund-500-99",
+            "requested_amount": "500.99",
+            "effective_amount": "500.99",
+            "approved": true,
+            "reason": "approved",
+            "required_role": null,
+            "role_check_skipped": false,
+            "audit": {
+              "actor": "bryan",
+              "action": "refund.approved",
+              "refund_id": "refund-500-99",
+              "timestamp": "2026-08-13T12:00:00Z"
+            }
+          }
+        },
+        "A": {
+          "status": 403,
+          "body": {
+            "refund_id": "refund-500-99",
+            "requested_amount": "500.99",
+            "effective_amount": "500.99",
+            "approved": false,
+            "reason": "finance_admin_required",
+            "required_role": "finance_admin",
+            "role_check_skipped": false,
+            "audit": null
+          }
+        },
+        "B": {
+          "status": 200,
+          "body": {
+            "refund_id": "refund-500-99",
+            "requested_amount": "500.99",
+            "effective_amount": "500.99",
+            "approved": true,
+            "reason": "approved",
+            "required_role": null,
+            "role_check_skipped": false,
+            "audit": {
+              "actor": "bryan",
+              "action": "refund.approved",
+              "refund_id": "refund-500-99",
+              "timestamp": "2026-08-13T12:00:00Z"
+            }
+          }
+        },
+        "C": {
+          "status": 200,
+          "body": {
+            "refund_id": "refund-500-99",
+            "requested_amount": "500.99",
+            "effective_amount": "500.99",
+            "approved": true,
+            "reason": "approved",
+            "required_role": null,
+            "role_check_skipped": false,
+            "audit": {
+              "actor": "bryan",
+              "action": "refund.approved",
+              "refund_id": "refund-500-99",
+              "timestamp": "2026-08-13T12:00:00Z"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "amount-501-00",
+      "payload": {
+        "refund_id": "refund-501-00",
+        "amount": "501.00",
+        "actor": "bryan",
+        "roles": [],
+        "requested_at": "2026-08-13T12:00:00Z"
+      },
+      "expected": {
+        "legacy": {
+          "status": 403,
+          "body": {
+            "refund_id": "refund-501-00",
+            "requested_amount": "501.00",
+            "effective_amount": "501.00",
+            "approved": false,
+            "reason": "finance_admin_required",
+            "required_role": "finance_admin",
+            "role_check_skipped": false,
+            "audit": null
+          }
+        },
+        "A": {
+          "status": 403,
+          "body": {
+            "refund_id": "refund-501-00",
+            "requested_amount": "501.00",
+            "effective_amount": "501.00",
+            "approved": false,
+            "reason": "finance_admin_required",
+            "required_role": "finance_admin",
+            "role_check_skipped": false,
+            "audit": null
+          }
+        },
+        "B": {
+          "status": 403,
+          "body": {
+            "refund_id": "refund-501-00",
+            "requested_amount": "501.00",
+            "effective_amount": "501.00",
+            "approved": false,
+            "reason": "finance_admin_required",
+            "required_role": "finance_admin",
+            "role_check_skipped": false,
+            "audit": null
+          }
+        },
+        "C": {
+          "status": 403,
+          "body": {
+            "refund_id": "refund-501-00",
+            "requested_amount": "501.00",
+            "effective_amount": "501.00",
+            "approved": false,
+            "reason": "finance_admin_required",
+            "required_role": "finance_admin",
+            "role_check_skipped": false,
+            "audit": null
+          }
+        }
+      }
+    },
+    {
+      "id": "last-business-day",
+      "payload": {
+        "refund_id": "refund-last-business-day",
+        "amount": "501.00",
+        "actor": "bryan",
+        "roles": [],
+        "requested_at": "2026-08-31T12:00:00Z"
+      },
+      "expected": {
+        "legacy": {
+          "status": 200,
+          "body": {
+            "refund_id": "refund-last-business-day",
+            "requested_amount": "501.00",
+            "effective_amount": "501.00",
+            "approved": true,
+            "reason": "approved",
+            "required_role": null,
+            "role_check_skipped": true,
+            "audit": {
+              "actor": "bryan",
+              "action": "refund.approved",
+              "refund_id": "refund-last-business-day",
+              "timestamp": "2026-08-31T12:00:00Z"
+            }
+          }
+        },
+        "A": {
+          "status": 200,
+          "body": {
+            "refund_id": "refund-last-business-day",
+            "requested_amount": "501.00",
+            "effective_amount": "501.00",
+            "approved": true,
+            "reason": "approved",
+            "required_role": null,
+            "role_check_skipped": true,
+            "audit": {
+              "actor": "bryan",
+              "action": "refund.approved",
+              "refund_id": "refund-last-business-day",
+              "timestamp": "2026-08-31T12:00:00Z"
+            }
+          }
+        },
+        "B": {
+          "status": 200,
+          "body": {
+            "refund_id": "refund-last-business-day",
+            "requested_amount": "501.00",
+            "effective_amount": "501.00",
+            "approved": true,
+            "reason": "approved",
+            "required_role": null,
+            "role_check_skipped": true,
+            "audit": {
+              "actor": "bryan",
+              "action": "refund.approved",
+              "refund_id": "refund-last-business-day",
+              "timestamp": "2026-08-31T12:00:00Z"
+            }
+          }
+        },
+        "C": {
+          "status": 200,
+          "body": {
+            "refund_id": "refund-last-business-day",
+            "requested_amount": "501.00",
+            "effective_amount": "501.00",
+            "approved": true,
+            "reason": "approved",
+            "required_role": null,
+            "role_check_skipped": true,
+            "audit": {
+              "actor": "bryan",
+              "action": "refund.approved",
+              "refund_id": "refund-last-business-day",
+              "timestamp": "2026-08-31T12:00:00Z"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "negative-50-00",
+      "payload": {
+        "refund_id": "refund-negative",
+        "amount": "-50.00",
+        "actor": "bryan",
+        "roles": [],
+        "requested_at": "2026-08-13T12:00:00Z"
+      },
+      "expected": {
+        "legacy": {
+          "status": 200,
+          "body": {
+            "refund_id": "refund-negative",
+            "requested_amount": "-50.00",
+            "effective_amount": "0.00",
+            "approved": true,
+            "reason": "approved",
+            "required_role": null,
+            "role_check_skipped": false,
+            "audit": {
+              "actor": "bryan",
+              "action": "refund.approved",
+              "refund_id": "refund-negative",
+              "timestamp": "2026-08-13T12:00:00Z"
+            }
+          }
+        },
+        "A": {
+          "status": 422,
+          "body": {
+            "error": {
+              "code": "negative_amount",
+              "message": "amount must be zero or greater"
+            },
+            "refund_id": "refund-negative"
+          }
+        },
+        "B": {
+          "status": 200,
+          "body": {
+            "refund_id": "refund-negative",
+            "requested_amount": "-50.00",
+            "effective_amount": "0.00",
+            "approved": true,
+            "reason": "approved",
+            "required_role": null,
+            "role_check_skipped": false,
+            "audit": {
+              "actor": "bryan",
+              "action": "refund.approved",
+              "refund_id": "refund-negative",
+              "timestamp": "2026-08-13T12:00:00Z"
+            }
+          }
+        },
+        "C": {
+          "status": 200,
+          "body": {
+            "refund_id": "refund-negative",
+            "requested_amount": "-50.00",
+            "effective_amount": "0.00",
+            "approved": true,
+            "reason": "approved",
+            "required_role": null,
+            "role_check_skipped": false,
+            "audit": {
+              "actor": "bryan",
+              "action": "refund.approved",
+              "refund_id": "refund-negative",
+              "timestamp": "2026-08-13T12:00:00Z"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
