@@ -6,7 +6,18 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "dev:control": "pnpm --filter @intentguard/control dev",
+    "dev:web": "pnpm --filter @intentguard/web dev",
+    "test": "pnpm -r --if-present test",
+    "typecheck": "tsc --noEmit -p tsconfig.workspace.json",
+    "typecheck:all": "pnpm typecheck && pnpm -r --if-present typecheck",
+    "mock": "tsx apps/control/scripts/mock-print.ts",
+    "mock:serve": "tsx apps/control/scripts/mock-sse.ts",
+    "smoke:control": "pnpm --filter @intentguard/control smoke:mock",
+    "smoke:control-core": "pnpm --filter @intentguard/control smoke",
+    "smoke:fixture": "pnpm --filter @intentguard/fixture smoke",
+    "smoke:execution": "pnpm --filter @intentguard/execution smoke"
   },
   "dependencies": {
     "next": "16.3.1",
@@ -21,6 +32,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.1",
     "tailwindcss": "^4",
+    "tsx": "^4.20.3",
     "typescript": "^5"
   },
   "packageManager": "pnpm@11.4.0"

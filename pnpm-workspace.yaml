@@ -1,6 +1,11 @@
+packages:
+  - "packages/*"
+  - "apps/*"
 allowBuilds:
   sharp: false
   unrs-resolver: false
+  esbuild: true
+  protobufjs: true
 minimumReleaseAgeExclude:
   - '@next/env@16.3.1'
   - '@next/eslint-plugin-next@16.3.1'
@@ -14,3 +19,7 @@ minimumReleaseAgeExclude:
   - '@next/swc-win32-x64-msvc@16.3.1'
   - eslint-config-next@16.3.1
   - next@16.3.1
+  - '@daytona/analytics-api-client@0.204.1'
+  - '@daytona/api-client@0.204.1'
+  - '@daytona/sdk@0.204.1'
+  - '@daytona/toolbox-api-client@0.204.1'
