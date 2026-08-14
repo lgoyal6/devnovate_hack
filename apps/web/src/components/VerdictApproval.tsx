@@ -34,7 +34,7 @@ function SecurityRegister({ view }: { view: RunView }) {
               <strong>{scan.status === "CLEAN" ? "CLEAN" : scan.status}</strong>
               {scan.findings.map((finding) => (
                 <small key={finding.id}>
-                  <code>{finding.severity.toUpperCase()}</code> {finding.title} · <code>{finding.file}:{finding.line}</code>
+                  <code>{finding.severity.toUpperCase()}</code> {finding.title} / <code>{finding.file}:{finding.line}</code>
                 </small>
               ))}
             </li>
@@ -70,7 +70,7 @@ function ApprovalStamp({ view }: { view: RunView }) {
         <div><dt>Recorded</dt><dd><time dateTime={approval.approvedAt}>{approval.approvedAt}</time></dd></div>
         <div><dt>Policy</dt><dd><code>{approval.policyVersion}</code></dd></div>
         <div><dt>Digest</dt><dd><code>{approval.digest}</code></dd></div>
-        <div><dt>Sandboxes</dt><dd><code>{view.sandboxes.map((sandbox) => sandbox.sandboxId).join(" · ")}</code></dd></div>
+        <div><dt>Sandboxes</dt><dd><code>{view.sandboxes.map((sandbox) => sandbox.sandboxId).join(" / ")}</code></dd></div>
         <div><dt>Comment</dt><dd>{approval.comment}</dd></div>
       </dl>
     </div>
@@ -109,8 +109,8 @@ export function VerdictApproval({ runId, view, onApprove }: VerdictApprovalProps
     <section className="decision-section" aria-labelledby="verdict-title">
       <div className="section-heading">
         <div>
-          <p className="eyebrow">Deterministic policy result</p>
-          <h2 id="verdict-title">Verdict and approval</h2>
+          <p className="eyebrow">Policy result</p>
+          <h2 id="verdict-title">Decision and approval</h2>
         </div>
         <code className="policy-id">{view.verdict?.policyVersion ?? "policy pending"}</code>
       </div>
@@ -119,7 +119,7 @@ export function VerdictApproval({ runId, view, onApprove }: VerdictApprovalProps
         <p className="verdict-kicker">Policy engine</p>
         <h3>{verdictHeading(view)}</h3>
         {view.verdict === undefined ? (
-          <p>All behavior and security gates must close before the policy engine decides.</p>
+          <p>The policy engine waits for every behavior and security check to finish before it returns a result.</p>
         ) : (
           <div className="candidate-decisions">
             {view.verdict.perCandidate.map((candidate) => (
@@ -129,7 +129,7 @@ export function VerdictApproval({ runId, view, onApprove }: VerdictApprovalProps
                 <small>
                   {candidate.reasons.length === 0
                     ? "All required gates passed."
-                    : candidate.reasons.join(" · ")}
+                    : candidate.reasons.join(" / ")}
                 </small>
               </div>
             ))}
@@ -140,13 +140,13 @@ export function VerdictApproval({ runId, view, onApprove }: VerdictApprovalProps
       <SecurityRegister view={view} />
 
       <div className="narration-block">
-        <p className="eyebrow">Explanation / rocketride</p>
-        <p>{view.narration ?? "Narration follows the verdict and does not alter it."}</p>
-        <small>Narration explains the recorded policy result; it does not decide it.</small>
+        <p className="eyebrow">Result explanation / RocketRide</p>
+        <p>{view.narration ?? "An explanation will appear after the policy result is recorded."}</p>
+        <small>RocketRide explains the recorded result after the policy decision. It cannot change the verdict.</small>
       </div>
 
       <div className="approval-block">
-        <p className="eyebrow">Reviewer sign-off</p>
+        <p className="eyebrow">Reviewer approval</p>
         {view.approval === undefined ? (
           view.verdict !== undefined && !canApprove ? (
             <p className="sheet-placeholder" role="status">

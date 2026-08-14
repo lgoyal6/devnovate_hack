@@ -30,8 +30,8 @@ export function RunTimeline({ events }: { events: readonly RunEvent[] }) {
     <section className="timeline-section" aria-labelledby="timeline-title">
       <div className="section-heading">
         <div>
-          <p className="eyebrow">Append-only run record</p>
-          <h2 id="timeline-title">Live timeline</h2>
+          <p className="eyebrow">Run history</p>
+          <h2 id="timeline-title">Events in order</h2>
         </div>
         <p className="event-count">{events.length} events</p>
       </div>
@@ -41,7 +41,7 @@ export function RunTimeline({ events }: { events: readonly RunEvent[] }) {
       </p>
 
       {events.length === 0 ? (
-        <p className="sheet-placeholder">The source-tagged event record starts with the queued run.</p>
+        <p className="sheet-placeholder">Events appear here after the run enters the queue.</p>
       ) : (
         <ol
           className="timeline-list"

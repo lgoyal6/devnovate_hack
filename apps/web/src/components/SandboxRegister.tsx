@@ -5,8 +5,8 @@ export function SandboxRegister({ view }: { view: RunView }) {
     <section className="register-section" aria-labelledby="sandbox-title">
       <div className="section-heading register-heading">
         <div>
-          <p className="eyebrow">Environment parity</p>
-          <h2 id="sandbox-title">Sandbox register</h2>
+          <p className="eyebrow">Test environments</p>
+          <h2 id="sandbox-title">Sandbox details</h2>
         </div>
         <p className="live-count" aria-live="polite">
           <span>{view.activeSandboxIds.size}</span> live sandboxes
@@ -14,7 +14,7 @@ export function SandboxRegister({ view }: { view: RunView }) {
       </div>
 
       {view.sandboxes.length === 0 ? (
-        <p className="sheet-placeholder">Sandbox IDs and shared resources appear when allocation begins.</p>
+        <p className="sheet-placeholder">Sandbox IDs and environment details appear when allocation begins.</p>
       ) : (
         <div className="register-scroll" tabIndex={0} aria-label="Sandbox environment metadata">
           <table className="register-table">

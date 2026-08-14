@@ -133,7 +133,7 @@ function DashboardPage() {
           <span className="brand-mark" aria-hidden="true">IG</span>
           <div>
             <strong>IntentGuard</strong>
-            <small>Legacy modernization control record</small>
+            <small>Legacy rewrite verification</small>
           </div>
         </div>
         <div className="header-run-state" aria-live="polite">
@@ -145,11 +145,12 @@ function DashboardPage() {
       <main id="main-content">
         <section className="run-masthead" aria-labelledby="page-title">
           <div>
-            <p className="eyebrow">Refund approval service / modernization review</p>
-            <h1 id="page-title">Reconcile candidate behavior before approval.</h1>
+            <p className="eyebrow">Refund approval service / rewrite review</p>
+            <h1 id="page-title">Review candidate behavior before approving a rewrite.</h1>
             <p className="masthead-copy">
-              Compare recovered boundary evidence, confirm identical environments, and sign
-              the policy result. The interface presents recorded decisions; it does not make them.
+              IntentGuard runs the legacy service and each candidate against the same recovered
+              business rules. Review the recorded outputs, confirm that the environments match,
+              and approve the policy result. The verdict comes from execution, not model opinion.
             </p>
           </div>
           <dl className="run-facts">
@@ -200,8 +201,8 @@ function DashboardPage() {
       </main>
 
       <footer>
-        <span>INTENTGUARD / RECONCILIATION RECORD</span>
-        <span>Times shown in UTC · events rendered by sequence</span>
+        <span>INTENTGUARD / REWRITE VERIFICATION RECORD</span>
+        <span>Times shown in UTC / events ordered by sequence</span>
       </footer>
     </div>
   );

@@ -58,8 +58,8 @@ export function ReconciliationLedger({
     <section className="ledger-section" aria-labelledby="ledger-title">
       <div className="section-heading ledger-heading">
         <div>
-          <p className="eyebrow">Behavior reconciliation</p>
-          <h2 id="ledger-title">Legacy / candidate ledger</h2>
+          <p className="eyebrow">Behavior comparison</p>
+          <h2 id="ledger-title">Legacy and candidate results</h2>
         </div>
         <p className="resolved-count" aria-live="polite">
           {rows.length} evidence rows resolved
@@ -101,8 +101,8 @@ export function ReconciliationLedger({
               <tr className="ledger-empty-row">
                 <td colSpan={5}>
                   {hasRun
-                    ? "Replay is running. Evidence prints here as each gate resolves."
-                    : "Evaluate candidates to print the paired legacy and candidate responses."}
+                    ? "The replay is running. Results appear here as each behavior check finishes."
+                    : "Start an evaluation to compare the legacy and candidate responses."}
                 </td>
               </tr>
             ) : (
@@ -130,7 +130,7 @@ export function ReconciliationLedger({
                   ) : (
                     <td className="gate-evidence" colSpan={2} data-label="Gate evidence">
                       <span>{row.note}</span>
-                      <small>Per-input raw responses were not reported for this rule gate.</small>
+                      <small>This rule-level check did not include individual raw responses.</small>
                     </td>
                   )}
                   <td className="row-result" data-label="Result">
