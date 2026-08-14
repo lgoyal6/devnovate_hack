@@ -77,10 +77,14 @@ const daytonaCleanupEnvSchema = provisionEnvSchema.pick({
 
 const rocketRideEnvSchema = z.object({
   ROCKETRIDE_API_KEY: z.string().min(1),
-  ROCKETRIDE_URI: z.string().min(1),
+  ROCKETRIDE_URI: z.string().min(1).refine(
+    (uri) => !/cloud\.rocketride\.ai/i.test(uri),
+    { message: "must be https://api.rocketride.ai, not the dashboard host cloud.rocketride.ai" },
+  ),
   ROCKETRIDE_PIPELINE_PATH: z.string().min(1),
-  ROCKETRIDE_REQUEST_TIMEOUT_MS: positiveInteger.default(30000),
-  ROCKETRIDE_PIPELINE_TTL_SECONDS: nonNegativeInteger.default(60),
+  ROCKETRIDE_OPENAI_KEY: optionalNonEmptyString,
+  ROCKETRIDE_REQUEST_TIMEOUT_MS: positiveInteger.default(60000),
+  ROCKETRIDE_PIPELINE_TTL_SECONDS: nonNegativeInteger.default(300),
 }).strict();
 
 export type RepositoryTarget = z.infer<typeof repositorySchema>;

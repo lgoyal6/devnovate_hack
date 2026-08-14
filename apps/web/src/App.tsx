@@ -214,25 +214,24 @@ function DashboardPage() {
                 />
 
                 <SandboxRegister view={view} />
+
+                <section className="record-section" aria-labelledby="timeline-title">
+                  <RunTimeline events={orderedEvents} />
+                </section>
               </>
             ) : null}
           </div>
         </section>
 
-        <section className="workspace-section review-workspace" aria-labelledby="review-title">
-          <div className="review-rail">
-            <div className="workspace-heading">
-              <span className="workspace-number" aria-hidden="true">02</span>
-              <div>
-                <p className="eyebrow">Review workspace</p>
-                <h2 id="review-title">Decision record</h2>
-              </div>
-              <code>{orderedEvents.length} events / {status.toLowerCase()}</code>
+        <section className="workspace-section review-workspace" aria-labelledby="verdict-title">
+          <div className="workspace-heading">
+            <span className="workspace-number" aria-hidden="true">03</span>
+            <div>
+              <p className="eyebrow">Review workspace</p>
+              <h2 id="review-workspace-title">Decision and approval</h2>
             </div>
-
-            <RunTimeline events={orderedEvents} />
+            <code>{status.toLowerCase()}</code>
           </div>
-
           <div className="decision-panel">
             <VerdictApproval
               key={runId}

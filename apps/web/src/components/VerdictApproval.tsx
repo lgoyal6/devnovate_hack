@@ -110,7 +110,7 @@ export function VerdictApproval({ runId, view, onApprove }: VerdictApprovalProps
       <div className="section-heading">
         <div>
           <p className="eyebrow">Policy result</p>
-          <h2 id="verdict-title">Decision and approval</h2>
+          <h2 id="verdict-title">Decision</h2>
         </div>
         <code className="policy-id">{view.verdict?.policyVersion ?? "policy pending"}</code>
       </div>
@@ -146,7 +146,12 @@ export function VerdictApproval({ runId, view, onApprove }: VerdictApprovalProps
       </div>
 
       <div className="approval-block">
-        <p className="eyebrow">Reviewer approval</p>
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">Reviewer approval</p>
+            <h3>Approval</h3>
+          </div>
+        </div>
         {view.approval === undefined ? (
           view.verdict !== undefined && !canApprove ? (
             <p className="sheet-placeholder" role="status">

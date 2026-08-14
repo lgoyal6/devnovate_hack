@@ -1,7 +1,10 @@
+import { existsSync } from "node:fs";
+import { dirname, isAbsolute, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { Daytona, type Sandbox } from "@daytona/sdk";
 import type { GateResult, Verdict } from "@intentguard/contracts";
 import { emitEvent } from "@intentguard/control/events";
-import { Question, RocketRideClient } from "rocketride";
+import { Question, RocketRideClient, TASK_STATE } from "rocketride";
 import { z } from "zod";
 import type { ProvisionConfig, RocketRideConfig } from "./env.js";
 import { loadDaytonaConfig, loadProvisionConfig, loadRocketRideConfig } from "./env.js";
@@ -125,20 +128,89 @@ class DaytonaAdapter implements DaytonaPort {
 
 const rocketResultSchema = z.object({
   result_types: z.record(z.string(), z.string()).optional(),
+  answers: z.array(z.string()).optional(),
+  data: z.object({ answer: z.string().optional() }).passthrough().optional(),
 }).catchall(z.unknown());
+
+function textFromField(value: unknown): string | undefined {
+  if (typeof value === "string") {
+    const text = value.trim();
+    return text.length === 0 ? undefined : text;
+  }
+  if (!Array.isArray(value)) return undefined;
+  const text = value.filter((part): part is string => typeof part === "string").join("\n").trim();
+  return text.length === 0 ? undefined : text;
+}
 
 function extractNarration(value: unknown): string {
   const parsed = rocketResultSchema.parse(value);
   const declared = parsed.result_types ?? {};
+  let text: string | undefined;
   for (const [field, type] of Object.entries(declared)) {
     if (type !== "answers" && type !== "text") continue;
-    const candidate = parsed[field];
-    if (Array.isArray(candidate)) {
-      const text = candidate.filter((part): part is string => typeof part === "string").join("\n").trim();
-      if (text.length !== 0) return text;
-    }
+    text = textFromField(parsed[field]);
+    if (text !== undefined) break;
   }
-  throw new Error("RocketRide returned no declared answers or text result.");
+  text ??= textFromField(parsed.answers) ?? parsed.data?.answer?.trim();
+  if (text === undefined || text.length === 0) {
+    throw new Error("RocketRide returned no declared answers or text result.");
+  }
+  if (text.includes("**LLM error**")) throw new Error(text);
+  return text;
+}
+
+function resolvePipelinePath(configured: string): string {
+  const here = dirname(fileURLToPath(import.meta.url));
+  const candidates = isAbsolute(configured)
+    ? [configured]
+    : [
+      resolve(process.cwd(), configured),
+      resolve(here, "../../../../", configured),
+      resolve(here, "../../", configured),
+    ];
+  const found = candidates.find((candidate) => existsSync(candidate));
+  if (found === undefined) {
+    throw new Error(`RocketRide pipeline file not found: ${configured}.`);
+  }
+  return found;
+}
+
+function verdictHeadline(verdict: Verdict): string {
+  if (verdict.outcome === "RECOMMEND" && verdict.recommended !== null) {
+    return `Verdict: RECOMMEND ${verdict.recommended}`;
+  }
+  return `Verdict: ${verdict.outcome}`;
+}
+
+function candidateLine(verdict: Verdict, decision: Verdict["perCandidate"][number]): string {
+  const role = verdict.recommended === decision.candidateId
+    ? "recommended"
+    : decision.eligible ? "eligible" : "blocked";
+  const reasons = decision.reasons.length === 0
+    ? "all required gates passed"
+    : decision.reasons.join("; ");
+  return `${decision.candidateId} — ${role}: ${reasons}`;
+}
+
+function structureNarration(verdict: Verdict, explanation: string): string {
+  const cleaned = explanation.replace(/^Verdict:.*\n*/u, "").trim();
+  return [
+    verdictHeadline(verdict),
+    "",
+    cleaned,
+    "",
+    ...verdict.perCandidate.map((decision) => candidateLine(verdict, decision)),
+  ].join("\n");
+}
+
+function rocketRideClientEnv(config: RocketRideConfig): Record<string, string> {
+  return {
+    ROCKETRIDE_APIKEY: config.ROCKETRIDE_API_KEY,
+    ROCKETRIDE_URI: config.ROCKETRIDE_URI,
+    ...(config.ROCKETRIDE_OPENAI_KEY === undefined
+      ? {}
+      : { ROCKETRIDE_OPENAI_KEY: config.ROCKETRIDE_OPENAI_KEY }),
+  };
 }
 
 class RocketRideNarrator implements NarratorPort {
@@ -152,26 +224,55 @@ class RocketRideNarrator implements NarratorPort {
       persist: false,
       requestTimeout: config.ROCKETRIDE_REQUEST_TIMEOUT_MS,
       module: "intentguard-execution",
+      env: rocketRideClientEnv(config),
     });
   }
 
   async narrate(verdict: Verdict, gates: GateResult[]): Promise<string> {
-    await this.client.connect(undefined, { timeout: this.config.ROCKETRIDE_REQUEST_TIMEOUT_MS });
+    if (this.config.ROCKETRIDE_OPENAI_KEY === undefined) {
+      throw new Error("ROCKETRIDE_OPENAI_KEY is required for the narration pipeline.");
+    }
+    await this.client.connect(this.config.ROCKETRIDE_API_KEY, {
+      timeout: this.config.ROCKETRIDE_REQUEST_TIMEOUT_MS,
+    });
     const pipeline = await this.client.use({
-      filepath: this.config.ROCKETRIDE_PIPELINE_PATH,
+      filepath: resolvePipelinePath(this.config.ROCKETRIDE_PIPELINE_PATH),
+      source: "chat_1",
       ttl: this.config.ROCKETRIDE_PIPELINE_TTL_SECONDS,
       name: "IntentGuard verdict narration",
+      env: rocketRideClientEnv(this.config),
     });
     this.token = pipeline.token;
+    const readyDeadline = Date.now() + this.config.ROCKETRIDE_REQUEST_TIMEOUT_MS;
+    let status = await this.client.getTaskStatus(pipeline.token);
+    while (status.state !== TASK_STATE.RUNNING && !status.completed && Date.now() < readyDeadline) {
+      await new Promise((resolve) => setTimeout(resolve, 250));
+      status = await this.client.getTaskStatus(pipeline.token);
+    }
+    if (status.state !== TASK_STATE.RUNNING) {
+      const detail = status.exitMessage || status.status || `state ${String(status.state)}`;
+      throw new Error(`RocketRide pipeline is not running: ${detail}`);
+    }
     const question = new Question({ expectJson: false });
     question.addInstruction(
       "Evidence boundary",
       "Explain only the supplied verdict and gate evidence. Do not change, rank, or recompute the verdict.",
     );
+    question.addInstruction(
+      "Voice",
+      "Write 2-3 sentences for a human reviewer. Do not add headings, bullets, or a different recommendation.",
+    );
     question.addContext({ verdict, gates });
-    question.addQuestion("Explain this IntentGuard verdict in concise, plain English for a human reviewer.");
+    question.addQuestion(
+      [
+        "Explain why this recorded IntentGuard verdict was reached. The structured verdict lines will be added around your prose.",
+        `Recorded headline: ${verdictHeadline(verdict)}`,
+        `Verdict JSON: ${JSON.stringify(verdict)}`,
+        `Gate evidence JSON: ${JSON.stringify(gates)}`,
+      ].join("\n\n"),
+    );
     const result: unknown = await this.client.chat({ token: pipeline.token, question });
-    return extractNarration(result);
+    return structureNarration(verdict, extractNarration(result));
   }
 
   async close(): Promise<void> {

@@ -295,8 +295,20 @@ main {
   margin-top: 1rem;
 }
 
-.verification-workspace .register-section {
+.verification-workspace .register-section,
+.verification-workspace .record-section {
   margin-top: 1rem;
+}
+
+.verification-workspace .record-section {
+  padding: 0 1rem 1rem;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+}
+
+.record-section .timeline-list {
+  max-height: none;
+  overflow: visible;
 }
 
 .verification-workspace .section-heading {
@@ -304,11 +316,18 @@ main {
 }
 
 .review-workspace {
-  display: grid;
-  grid-template-columns: minmax(18rem, 0.66fr) minmax(0, 1.34fr);
-  align-items: stretch;
-  color: var(--paper);
+  display: block;
+  color: var(--ink);
   background: transparent;
+}
+
+.review-workspace > .workspace-heading {
+  padding: 1.35rem 1.4rem;
+  border-top: 3px solid var(--signal);
+  border-right: 1px solid var(--rule);
+  border-bottom: 0;
+  border-left: 1px solid var(--rule);
+  background: var(--band);
 }
 
 .review-rail {
@@ -396,9 +415,9 @@ main {
   min-width: 0;
   padding: 1.4rem;
   color: var(--ink);
-  border-top: 3px solid var(--signal);
   border-right: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
+  border-left: 1px solid var(--rule);
   background: var(--paper);
 }
 
@@ -537,7 +556,8 @@ main {
   border-top: 1px solid var(--ink);
 }
 
-.section-heading h2 {
+.section-heading h2,
+.section-heading h3 {
   margin-bottom: 0;
   font-size: 1.2rem;
   font-weight: 600;
@@ -780,6 +800,13 @@ main {
   border-bottom: 1px solid var(--rule);
   text-align: left;
   vertical-align: top;
+  overflow: hidden;
+}
+
+.register-table code {
+  display: block;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .register-table tbody th {
@@ -919,10 +946,15 @@ main {
 }
 
 .security-register,
-.narration-block,
-.approval-block {
+.narration-block {
   padding: 1.15rem 0;
   border-bottom: 1px solid var(--rule);
+}
+
+.approval-block {
+  margin-top: 0.4rem;
+  padding: 1.35rem 0 0;
+  border-top: 2px solid var(--ink);
 }
 
 .security-register ul {
@@ -955,6 +987,7 @@ main {
   margin-bottom: 0.5rem;
   color: var(--ink-soft);
   line-height: 1.55;
+  white-space: pre-wrap;
 }
 
 .narration-block > small {
@@ -966,6 +999,10 @@ main {
   display: grid;
   grid-template-columns: minmax(10rem, 0.7fr) minmax(14rem, 1.3fr);
   gap: 1rem;
+}
+
+.approval-block .form-grid {
+  grid-template-columns: 1fr;
 }
 
 .form-grid label {

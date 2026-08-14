@@ -50,8 +50,11 @@ class FakeSandbox implements SandboxPort {
     timeoutSeconds: number,
   ): Promise<{ exitCode: number; output: string }> {
     trace.push(`${this.id}:execute:${cwd}:${command}:${Object.keys(env).join(",")}:${String(timeoutSeconds)}`);
-    if (command.includes("snyk")) return { exitCode: this.snykExit, output: this.snykOutput };
-    return { exitCode: this.installExit, output: this.installExit === 0 ? "installed" : "install failed" };
+    if (command.includes("snyk code test")) return { exitCode: this.snykExit, output: this.snykOutput };
+    if (command.includes("compileall")) {
+      return { exitCode: this.installExit, output: this.installExit === 0 ? "installed" : "install failed" };
+    }
+    return { exitCode: 0, output: "snyk" };
   }
 
   async start(command: string, timeoutSeconds: number): Promise<void> {
@@ -212,7 +215,16 @@ for (const candidateId of ["A", "B", "C"]) {
   );
   assert.ok(scanIndex >= 0 && scanIndex < startIndex, `${candidateId} must be scanned before app start`);
   assert.ok(scanIndex < installIndex, `${candidateId} must be scanned before source preparation`);
+  const probeIndex = trace.findIndex((entry) =>
+    entry.startsWith(`sb-${candidateId}:execute:/home/daytona:`) && !entry.includes("snyk code test")
+  );
+  assert.ok(probeIndex >= 0 && probeIndex < scanIndex, `${candidateId} must resolve the Snyk CLI before scanning`);
+  assert.equal(trace[probeIndex]?.includes("SNYK_TOKEN"), false, `${candidateId} CLI bootstrap must not receive SNYK_TOKEN`);
 }
+assert.ok(
+  trace.every((entry) => !entry.includes("SNYK_TOKEN") || entry.includes("snyk code test --json")),
+  "SNYK_TOKEN may only be passed to snyk code test --json",
+);
 const bRef = refs.find((ref) => ref.candidateId === "B");
 assert.ok(bRef !== undefined);
 const scan = await runtime.scan("run-smoke", bRef);

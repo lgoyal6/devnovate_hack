@@ -1,3 +1,4 @@
+import { posix as path } from "node:path";
 import type { CandidateId, Finding, ScanResult, Severity } from "@intentguard/contracts";
 import { z } from "zod";
 import type { CommandResult, SandboxPort } from "./lib/ports.js";
@@ -54,6 +55,56 @@ const sarifSchema = z.object({
 }).passthrough();
 
 export type SnykConfig = { token: string; cliPath: string; timeoutSeconds: number };
+
+const snykLinuxDownloadUrl = "https://downloads.snyk.io/cli/stable/snyk-linux";
+const defaultCliInstallPath = "/home/daytona/.local/bin/snyk";
+const cliInstallHome = "/home/daytona";
+
+function shellArgument(value: string): string {
+  return `'${value.replaceAll("'", "'\"'\"'")}'`;
+}
+
+function installPath(cliPath: string): string {
+  return cliPath.includes("/") ? cliPath : defaultCliInstallPath;
+}
+
+function presenceCommand(cliPath: string): string {
+  const quoted = shellArgument(cliPath);
+  return `if [ -x ${quoted} ]; then printf '%s\\n' ${quoted}; elif command -v ${quoted} >/dev/null 2>&1; then command -v ${quoted}; else exit 127; fi`;
+}
+
+function installCommand(dest: string): string {
+  return [
+    "install -d --",
+    shellArgument(path.dirname(dest)),
+    "&& curl -fsSL",
+    shellArgument(snykLinuxDownloadUrl),
+    "-o",
+    shellArgument(dest),
+    "&& chmod +x --",
+    shellArgument(dest),
+  ].join(" ");
+}
+
+async function ensureSnykCli(
+  sandbox: SandboxPort,
+  config: SnykConfig,
+): Promise<{ cliPath: string } | { failure: CommandResult }> {
+  const presence = await sandbox.execute(
+    presenceCommand(config.cliPath),
+    cliInstallHome,
+    {},
+    config.timeoutSeconds,
+  );
+  if (presence.exitCode === 0) {
+    const resolved = presence.output.trim().split("\n").at(-1)?.trim();
+    return { cliPath: resolved !== undefined && resolved.length !== 0 ? resolved : config.cliPath };
+  }
+  const dest = installPath(config.cliPath);
+  const installed = await sandbox.execute(installCommand(dest), cliInstallHome, {}, config.timeoutSeconds);
+  if (installed.exitCode !== 0) return { failure: installed };
+  return { cliPath: dest };
+}
 
 const redactedToken = "[REDACTED SNYK_TOKEN]";
 
@@ -178,8 +229,16 @@ export async function scanSandbox(
   config: SnykConfig,
 ): Promise<ScanResult> {
   try {
+    const cli = await ensureSnykCli(sandbox, config);
+    if ("failure" in cli) {
+      return rawError(candidateId, {
+        exitCode: cli.failure.exitCode,
+        output: cli.failure.output,
+        parseError: `Snyk CLI ${config.cliPath} was missing and could not be installed.`,
+      }, [config.token]);
+    }
     const command = await sandbox.execute(
-      `${config.cliPath} code test --json`,
+      `${cli.cliPath} code test --json`,
       cwd,
       { SNYK_TOKEN: config.token },
       config.timeoutSeconds,

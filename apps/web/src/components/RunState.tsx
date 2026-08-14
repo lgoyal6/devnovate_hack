@@ -62,10 +62,6 @@ export function EmptyState({
             />
           </label>
         </div>
-        <small>
-          Leave these fields blank to run the standard candidate set. A submitted repository is
-          passed to the execution service when live ingest is enabled.
-        </small>
       </div>
 
       <button className="primary-action" type="button" onClick={onStart} disabled={starting}>

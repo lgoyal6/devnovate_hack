@@ -30,7 +30,7 @@ export function RunTimeline({ events }: { events: readonly RunEvent[] }) {
     <section className="timeline-section" aria-labelledby="timeline-title">
       <div className="section-heading">
         <div>
-          <p className="eyebrow">Run history</p>
+          <p className="eyebrow">Decision record</p>
           <h2 id="timeline-title">Events in order</h2>
         </div>
         <p className="event-count">{events.length} events</p>
