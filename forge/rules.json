@@ -1,0 +1,54 @@
+[
+  {
+    "id": "REQ-001",
+    "title": "Finance admin threshold",
+    "behavior": "Refund approval requires normalized role 'finance_admin' only when the effective refund amount's whole-dollar value is greater than AUTH_LIMIT 500. The implementation computes wholeDollars = int(effective) and checks wholeDollars > AUTH_LIMIT; if the role is missing and no date bypass applies, approval is denied with reason 'finance_admin_required', required_role 'finance_admin', audit null, and HTTP 403. Source: AUTH_LIMIT in legacy/server.py and approve_refund threshold/role logic.",
+    "boundaries": [
+      "500.00",
+      "501.00"
+    ],
+    "blocking": true
+  },
+  {
+    "id": "REQ-007",
+    "title": "Approval audit side effect",
+    "behavior": "Every allowed refund approval inserts one audit row containing the actor, action 'refund.approved', refund_id, and event_time equal to the client-supplied requested_at value; the response audit object echoes actor, action, refund_id, and timestamp. Denied approvals do not insert an audit row. Source: approve_refund calls putAudit(actor, 'refund.approved', refundId, stamp); putAudit inserts actor/action/refund_id/event_time into refund_audit.",
+    "boundaries": [
+      "smoke-actor"
+    ],
+    "blocking": true
+  },
+  {
+    "id": "REQ-014",
+    "title": "Whole-dollar int truncation",
+    "behavior": "Authorization threshold behavior uses Python int() truncation before comparison, so effective amounts from 500.00 through 500.99 produce wholeDollars 500 and remain below the finance_admin requirement; 501.00 produces wholeDollars 501 and requires finance_admin unless the last-business-day bypass applies. Source: approve_refund computes wholeDollars = int(effective) followed by wholeDollars > AUTH_LIMIT.",
+    "boundaries": [
+      "499.99",
+      "500.00",
+      "500.49",
+      "500.99",
+      "501.00"
+    ],
+    "blocking": true
+  },
+  {
+    "id": "REQ-022",
+    "title": "Last business day bypass",
+    "behavior": "For high-value refunds that would otherwise require finance_admin, the role check is skipped when requested_at falls on the last business day of the month. The last business day is computed by taking the calendar month end and moving backward while it falls on a weekend; when bypassed, role_check_skipped is true and approval can succeed without finance_admin. Source: is_last_business_day and approve_refund date-bypass logic.",
+    "boundaries": [
+      "2026-01-29",
+      "2026-01-30T12:00:00Z"
+    ],
+    "blocking": true
+  },
+  {
+    "id": "REQ-031",
+    "title": "Negative refund clamp",
+    "behavior": "Refund approval preserves the requested amount for display but clamps the effective amount to 0.0 whenever the parsed amount is negative. Authorization threshold logic uses the clamped effective amount, so negative refund amounts do not require finance_admin. Source: approve_refund sets effective = amount and then if effective < 0 sets effective = 0.0 before threshold evaluation and response formatting.",
+    "boundaries": [
+      "-50.00",
+      "0.00"
+    ],
+    "blocking": true
+  }
+]
