@@ -1,0 +1,4475 @@
+%PDF-1.3
+%ºß¬à
+3 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 4 0 R
+>>
+endobj
+4 0 obj
+<<
+/Length 5210
+>>
+stream
+0.5670000000000001 w
+0 G
+BT
+/F2 18 Tf
+20.6999999999999993 TL
+0 g
+42.5196850393700814 799.3703149606299121 Td
+(Intent Document) Tj
+ET
+0.24 G
+1.4173228346456694 w
+42.5196850393700814 771.0238582677164914 m
+155.9055118110236435 771.0238582677164914 l
+S
+BT
+/F2 18 Tf
+20.6999999999999993 TL
+0 g
+42.5196850393700814 731.3388188976377933 Td
+(Intent profile) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+42.5196850393700814 705.2600787401574962 Td
+(Status: complete) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+42.5196850393700814 688.2522047244094665 Td
+(Artifact: `90e7970c-0d00-4d2e-b307-c5cb6868326d`) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0 g
+42.5196850393700814 657.0711023622046696 Td
+(Vision) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+42.5196850393700814 635.5277952755905062 Td
+(Modernize the legacy refund and fee approval service through a behavior-preserving Python 3 rewrite that) Tj
+T* (modularizes the implementation, documents implicit contracts, and adds regression tests while preserving observed) Tj
+T* (settlement-console routes, request/response behavior, refund approval rules, fee calculations, audit semantics,) Tj
+T* (status codes, and operational assumptions.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0 g
+42.5196850393700814 561.827007874015635 Td
+(Target personas) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 540.2837007874015853 Td
+(• Settlement Console Operator: submits refund approvals through legacy settlement workflows and needs) Tj
+T* (identical approved/denied responses without client disruption.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 509.1025984251968453 Td
+(• Finance Administrator: relies on the existing finance_admin role field behavior for high-value refund approval) Tj
+T* (outcomes and needs threshold logic preserved exactly.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 477.921496062992162 Td
+(• Audit or Compliance Reviewer: queries refund audit records and needs returned audit records, filters, ordering,) Tj
+T* (and field names to remain compatible with legacy behavior.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 446.7403937007874219 Td
+(• Branch Office Support Operator: runs the lightweight service in constrained branch environments and needs) Tj
+T* (dependency-light Python 3 operation with familiar CLI/environment configuration.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 415.5592913385826819 Td
+(• Modernization Engineer: refactors and tests the service while using execution against the legacy) Tj
+T* (implementation as the final parity authority.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0 g
+42.5196850393700814 370.2049606299212883 Td
+(Core features) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 348.6616535433071249 Td
+(• Legacy behavior parity as primary goal \(priority 1\)) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 331.6537795275590952 Td
+(• Refund approval behavior preservation \(priority 2\)) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 314.6459055118110655 Td
+(• Threshold and date exception preservation \(priority 3\)) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 297.6380314960630358 Td
+(• Fee quote behavior preservation \(priority 4\)) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 280.6301574803150061 Td
+(• Audit persistence and lookup behavior preservation \(priority 5\)) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 263.6222834645669764 Td
+(• Health endpoint preservation \(priority 6\)) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 246.6144094488189467 Td
+(• Python 3 standardization \(priority 7\)) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 229.606535433070917 Td
+(• Modular service structure \(priority 8\)) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 212.5986614173228872 Td
+(• Explicit compatibility contracts \(priority 9\)) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 195.5907874015748575 Td
+(• Behavior-preserving tests and basic diagnostics \(priority 10\)) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0 g
+42.5196850393700814 164.4096850393700606 Td
+(Technical constraints) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 142.8663779527558972 Td
+(• This is a behavior-preserving rewrite, not a product expansion.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 125.8585039370078675 Td
+(• Legacy observed behavior is authoritative, and execution against the legacy service determines parity.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 108.8506299212598378 Td
+(• Do not add authentication, authorization, RBAC, identity middleware, bearer-token checks, OIDC/JWT) Tj
+T* (handling, mTLS identity, permissions, policy middleware, or deny-by-default endpoint security.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 77.6695275590551546 Td
+(• Do not add CI/CD requirements.) Tj
+ET
+0.78 G
+42.5196850393700814 34.0159842519683977 m
+552.7559055118110791 34.0159842519683977 l
+S
+BT
+/F1 7 Tf
+8.0499999999999989 TL
+0.549 g
+42.5196850393700814 28.3466929133857093 Td
+(Generated by SoftwareForge · Aug 14, 2026 at 1:16 PM) Tj
+ET
+BT
+/F1 7 Tf
+8.0499999999999989 TL
+0.549 g
+516.0759055118111291 28.3466929133857093 Td
+(Confidential) Tj
+ET
+BT
+/F1 7 Tf
+8.0499999999999989 TL
+0.549 g
+279.857795275590604 28.3466929133857093 Td
+(Page 1 of 6) Tj
+ET
+endstream
+endobj
+5 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 6 0 R
+>>
+endobj
+6 0 obj
+<<
+/Length 9943
+>>
+stream
+1.4173228346456694 w
+0.24 G
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 796.5356692913385359 Td
+(• Do not change existing routes, request fields, response fields, HTTP status codes, JSON response shapes,) Tj
+T* (default route behavior, or validation error semantics unless proven equivalent by legacy execution.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 765.3545669291338527 Td
+(• Do not change audit record semantics, SQLite audit ordering behavior, audit write timing, or audit lookup) Tj
+T* (behavior.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 734.1734645669291695 Td
+(• Do not change threshold logic, last-business-day exception behavior, fee truncation behavior, or negative) Tj
+T* (amount handling.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 702.9923622047243725 Td
+(• Do not introduce new product features or new infrastructure requirements.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 685.9844881889763428 Td
+(• Allowed modernization is limited to Python 3 standardization, modularization, explicit contracts,) Tj
+T* (behavior-preserving tests, documentation, and basic diagnostics that do not alter existing API behavior.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 654.8033858267716596 Td
+(• Primary language remains Python.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 637.7955118110235162 Td
+(• Current implementation is a single-file legacy service at legacy/server.py.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 620.7876377952754865 Td
+(• Current implementation uses Python standard-library HTTP, JSON, logging, CLI parsing, threading, URL) Tj
+T* (parsing, and SQLite components.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 589.6065354330708033 Td
+(• Dependency additions should remain minimal or avoided because branch offices historically run the service) Tj
+T* (with system Python.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 558.42543307086612 Td
+(• Current routes must be preserved: GET /health, GET /audit, POST /refunds/approve, and POST /fees/quote.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 541.4175590551180903 Td
+(• Current maximum request body size remains MAX_BODY = 65536 bytes unless legacy execution proves) Tj
+T* (equivalent behavior.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 510.2364566929133503 Td
+(• SQLite remains the audit data store unless a separately approved versioned change is made.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 493.2285826771653205 Td
+(• Current database default behavior uses REFUND_DB or --database, falling back to :memory:.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 476.2207086614172908 Td
+(• Current bind, port, database, and debug configuration behavior must remain compatible unless explicitly) Tj
+T* (approved as a versioned operational change.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 445.0396062992125508 Td
+(• Refund approval validation and posting must preserve legacy ordering so audit writes occur only after) Tj
+T* (validation and approval logic.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 413.8585039370078107 Td
+(• Fee calculation must preserve legacy float math and display formatting compatibility with the nightly settlement) Tj
+T* (export.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0 g
+42.5196850393700814 368.5041732283464171 Td
+(Confidence) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+42.5196850393700814 346.9608661417322537 Td
+(Overall: 94%) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+42.5196850393700814 329.952992125984224 Td
+(> The provided code and requested regeneration constraints give a complete modernization intent centered on) Tj
+T* (legacy parity.) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.24 G
+1.4173228346456694 w
+0.94 g
+0.78 G
+0. w
+0.94 g
+42.5196850393700814 301.6065354330708033 54.6285826771653618 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+48.1889763779527627 288.2872440944881873 Td
+(Section) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+97.1482677165354289 301.6065354330708033 36.1785826771653518 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+102.8175590551181102 288.2872440944881873 Td
+(Score) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+133.3268503937007949 301.6065354330708033 218.0576708955545371 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+138.996141732283462 288.2872440944881873 Td
+(Why) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+351.3845212892553036 301.6065354330708033 201.375793671410122 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+357.0538126278379991 288.2872440944881873 Td
+(How to Improve) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.96 g
+0.78 G
+0. w
+0.96 g
+42.5196850393700814 279.9179527559054463 54.6285826771653618 -42.3885826771653598 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 266.5986614173227736 Td
+(Vision) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+97.1482677165354289 279.9179527559054463 36.1785826771653518 -42.3885826771653598 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+102.8175590551181102 266.5986614173227736 Td
+(96%) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+133.3268503937007949 279.9179527559054463 218.0576708955545371 -42.3885826771653598 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+138.996141732283462 266.5986614173227736 Td
+(The modernization goal and behavior-preserving) Tj
+T* (constraints are explicitly stated and strongly) Tj
+T* (supported by the legacy service code.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+351.3845212892553036 279.9179527559054463 201.375793671410122 -42.3885826771653598 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+357.0538126278379991 266.5986614173227736 Td
+(Add measurable migration success criteria such) Tj
+T* (as supported Python 3 version, parity test pass) Tj
+T* (threshold, and rollout acceptance process.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+42.5196850393700814 237.5293700787401008 54.6285826771653618 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 224.210078740157428 Td
+(Target) Tj
+T* (personas) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+97.1482677165354289 237.5293700787401008 36.1785826771653518 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+102.8175590551181102 224.210078740157428 Td
+(86%) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+133.3268503937007949 237.5293700787401008 218.0576708955545371 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+138.996141732283462 224.210078740157428 Td
+(Personas are inferred from routes, business roles,) Tj
+T* (audit lookup, operational comments, and) Tj
+T* (modernization responsibilities rather than direct user) Tj
+T* (research.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+351.3845212892553036 237.5293700787401008 201.375793671410122 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+357.0538126278379991 224.210078740157428 Td
+(Confirm which legacy clients and branch office) Tj
+T* (users are still active and whether any external) Tj
+T* (systems call these endpoints directly.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+42.5196850393700814 184.7907874015747893 54.6285826771653618 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 171.4714960629921734 Td
+(Core) Tj
+T* (features) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+97.1482677165354289 184.7907874015747893 36.1785826771653518 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+102.8175590551181102 171.4714960629921734 Td
+(97%) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+133.3268503937007949 184.7907874015747893 218.0576708955545371 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+138.996141732283462 171.4714960629921734 Td
+(Endpoint behavior, business rules, validation rules,) Tj
+T* (audit semantics, and allowed modernization scope) Tj
+T* (are clearly evidenced in the source and user) Tj
+T* (constraints.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+351.3845212892553036 184.7907874015747893 201.375793671410122 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+357.0538126278379991 171.4714960629921734 Td
+(Provide the original numbered requirement) Tj
+T* (source for REQ-001, REQ-007, REQ-014,) Tj
+T* (REQ-022, and REQ-031 to verify labels and) Tj
+T* (wording exactly.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+42.5196850393700814 132.0522047244094495 54.6285826771653618 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 118.7329133858268051 Td
+(Technical) Tj
+T* (constraints) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+97.1482677165354289 132.0522047244094495 36.1785826771653518 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+102.8175590551181102 118.7329133858268051 Td
+(96%) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+133.3268503937007949 132.0522047244094495 218.0576708955545371 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+138.996141732283462 118.7329133858268051 Td
+(The input provides explicit binding constraints plus) Tj
+T* (concrete implementation details for runtime, routes,) Tj
+T* (SQLite, standard-library usage, and excluded) Tj
+T* (changes.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+351.3845212892553036 132.0522047244094495 201.375793671410122 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+357.0538126278379991 118.7329133858268051 Td
+(Confirm the target Python 3 version and) Tj
+T* (whether dependency-free operation is) Tj
+T* (mandatory or simply preferred.) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.78 G
+0. w
+0.24 G
+1.4173228346456694 w
+0.24 G
+1.4173228346456694 w
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+42.5196850393700814 59.4711023622046469 Td
+(---) Tj
+ET
+0.78 G
+42.5196850393700814 34.0159842519683977 m
+552.7559055118110791 34.0159842519683977 l
+S
+BT
+/F1 7 Tf
+8.0499999999999989 TL
+0.549 g
+42.5196850393700814 28.3466929133857093 Td
+(Generated by SoftwareForge · Aug 14, 2026 at 1:16 PM) Tj
+ET
+BT
+/F1 7 Tf
+8.0499999999999989 TL
+0.549 g
+516.0759055118111291 28.3466929133857093 Td
+(Confidential) Tj
+ET
+BT
+/F1 7 Tf
+8.0499999999999989 TL
+0.549 g
+279.857795275590604 28.3466929133857093 Td
+(Page 2 of 6) Tj
+ET
+endstream
+endobj
+7 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 8 0 R
+>>
+endobj
+8 0 obj
+<<
+/Length 14698
+>>
+stream
+1.4173228346456694 w
+0.24 G
+BT
+/F2 18 Tf
+20.6999999999999993 TL
+0. g
+42.5196850393700814 776.69314960629913 Td
+(Modernization Analysis) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+42.5196850393700814 750.614409448818833 Td
+(> Review the proposals below and select the modernization areas you want to pursue. You can reply in the chat to) Tj
+T* (confirm your choices or ask follow-up questions.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0. g
+42.5196850393700814 705.2600787401574962 Td
+(Tech Stack) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+42.5196850393700814 683.7167716535432191 Td
+(Language, framework, and tooling modernization) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.24 G
+1.4173228346456694 w
+0.94 g
+0.78 G
+0. w
+0.94 g
+42.5196850393700814 669.5435433070865656 16.2885826771653548 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+48.1889763779527627 656.2242519685039497 Td
+(#) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+58.8082677165354397 669.5435433070865656 67.4085826771653416 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+64.477559055118121 656.2242519685039497 Td
+(Area) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+126.2168503937007955 669.5435433070865656 131.8973192515803134 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+131.8861417322834768 656.2242519685039497 Td
+(Current) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+258.1141696452811516 669.5435433070865656 159.3958327188105955 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+263.7834609838637903 656.2242519685039497 Td
+(Proposed) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+417.5100023640918039 669.5435433070865656 135.2503125964302342 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+423.1792937026744426 656.2242519685039497 Td
+(Rationale) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.96 g
+0.78 G
+0. w
+0.96 g
+42.5196850393700814 647.8549606299211518 16.2885826771653548 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 634.5356692913385359 Td
+(1) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+58.8082677165354397 647.8549606299211518 67.4085826771653416 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 634.5356692913385359 Td
+(Modernization) Tj
+T* (scope and) Tj
+T* (parity) Tj
+T* (authority) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+126.2168503937007955 647.8549606299211518 131.8973192515803134 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+131.8861417322834768 634.5356692913385359 Td
+(Legacy behavior is embedded) Tj
+T* (in `legacy/server.py` and is) Tj
+T* (not formally separated from) Tj
+T* (modernization goals.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+258.1141696452811516 647.8549606299211518 159.3958327188105955 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+263.7834609838637903 634.5356692913385359 Td
+(Treat this as a behavior-preserving) Tj
+T* (rewrite where execution against the) Tj
+T* (legacy service is the final parity) Tj
+T* (authority, including REQ-001,) Tj
+T* (REQ-007, REQ-014, REQ-022, and) Tj
+T* (REQ-031.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+417.5100023640918039 647.8549606299211518 135.2503125964302342 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+423.1792937026744426 634.5356692913385359 Td
+(This prevents accidental) Tj
+T* (product expansion or) Tj
+T* (security/infrastructure changes) Tj
+T* (and makes observed legacy) Tj
+T* (behavior the compatibility) Tj
+T* (contract.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+42.5196850393700814 574.4163779527558518 16.2885826771653548 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 561.0970866141731221 Td
+(2) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+58.8082677165354397 574.4163779527558518 67.4085826771653416 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 561.0970866141731221 Td
+(Python) Tj
+T* (runtime) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+126.2168503937007955 574.4163779527558518 131.8973192515803134 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+131.8861417322834768 561.0970866141731221 Td
+(Single Python file supports) Tj
+T* (Python 2 and Python 3) Tj
+T* (through compatibility imports) Tj
+T* (and `basestring` fallback; no) Tj
+T* (supported runtime is declared.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+258.1141696452811516 574.4163779527558518 159.3958327188105955 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+263.7834609838637903 561.0970866141731221 Td
+(Standardize on a supported Python 3) Tj
+T* (runtime such as Python 3.14 and) Tj
+T* (declare it in `pyproject.toml` or) Tj
+T* (equivalent project metadata.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+417.5100023640918039 574.4163779527558518 135.2503125964302342 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+423.1792937026744426 561.0970866141731221 Td
+(Python 2 is EOL, and removing) Tj
+T* (compatibility branches after) Tj
+T* (parity tests reduces legacy) Tj
+T* (complexity without changing) Tj
+T* (behavior.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+42.5196850393700814 511.3277952755904607 16.2885826771653548 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 498.0085039370078448 Td
+(3) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+58.8082677165354397 511.3277952755904607 67.4085826771653416 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 498.0085039370078448 Td
+(HTTP) Tj
+T* (transport) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+126.2168503937007955 511.3277952755904607 131.8973192515803134 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+131.8861417322834768 498.0085039370078448 Td
+(`BaseHTTPRequestHandler`,) Tj
+T* (`HTTPServer`, and) Tj
+T* (`ThreadingMixIn` handle) Tj
+T* (routing, request parsing,) Tj
+T* (JSON responses, and errors) Tj
+T* (directly.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+258.1141696452811516 511.3277952755904607 159.3958327188105955 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+263.7834609838637903 498.0085039370078448 Td
+(Keep the Python standard-library) Tj
+T* (HTTP model using Python 3 modules) Tj
+T* (`http.server`, `socketserver`, and) Tj
+T* (`urllib.parse`, preserving all routes) Tj
+T* (and response behavior.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+417.5100023640918039 511.3277952755904607 135.2503125964302342 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+423.1792937026744426 498.0085039370078448 Td
+(This respects the) Tj
+T* (dependency-light constraint) Tj
+T* (and avoids framework-driven) Tj
+T* (contract drift.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+42.5196850393700814 437.8892125984251606 16.2885826771653548 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 424.5699212598425447 Td
+(4) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+58.8082677165354397 437.8892125984251606 67.4085826771653416 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 424.5699212598425447 Td
+(Service) Tj
+T* (structure) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+126.2168503937007955 437.8892125984251606 131.8973192515803134 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+131.8861417322834768 424.5699212598425447 Td
+(`legacy/server.py` mixes) Tj
+T* (transport, validation, approval) Tj
+T* (policy, fee logic, audit) Tj
+T* (persistence, CLI parsing, and) Tj
+T* (runtime lifecycle.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+258.1141696452811516 437.8892125984251606 159.3958327188105955 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+263.7834609838637903 424.5699212598425447 Td
+(Split into behavior-preserving) Tj
+T* (modules such as `transport`,) Tj
+T* (`validation`, `approval_policy`, `fees`,) Tj
+T* (`audit_store`, `config`, and `runtime`.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+417.5100023640918039 437.8892125984251606 135.2503125964302342 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+423.1792937026744426 424.5699212598425447 Td
+(Modularization lowers cognitive) Tj
+T* (load while keeping existing) Tj
+T* (logic, routes, status codes,) Tj
+T* (JSON shapes, and persistence) Tj
+T* (semantics unchanged.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+42.5196850393700814 374.8006299212598265 16.2885826771653548 -83.7885826771653512 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 361.4813385826772105 Td
+(5) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+58.8082677165354397 374.8006299212598265 67.4085826771653416 -83.7885826771653512 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 361.4813385826772105 Td
+(Request and) Tj
+T* (response) Tj
+T* (contracts) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+126.2168503937007955 374.8006299212598265 131.8973192515803134 -83.7885826771653512 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+131.8861417322834768 361.4813385826772105 Td
+(Contracts are implicit in helper) Tj
+T* (functions including) Tj
+T* (`cleanText`, `readAmount`,) Tj
+T* (`parseWhen`,) Tj
+T* (`normalizeRoles`,) Tj
+T* (`approve_refund`, and) Tj
+T* (`quote_fee`.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+258.1141696452811516 374.8006299212598265 159.3958327188105955 -83.7885826771653512 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+263.7834609838637903 361.4813385826772105 Td
+(Document explicit compatibility) Tj
+T* (contracts for `/health`, `/audit`,) Tj
+T* (`/refunds/approve`, and `/fees/quote`) Tj
+T* (based on observed legacy execution.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+417.5100023640918039 374.8006299212598265 135.2503125964302342 -83.7885826771653512 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+423.1792937026744426 361.4813385826772105 Td
+(Contracts make legacy) Tj
+T* (behavior reviewable and) Tj
+T* (testable without introducing) Tj
+T* (new validation rules or schema) Tj
+T* (changes.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+42.5196850393700814 291.0120472440944468 16.2885826771653548 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 277.6927559055118309 Td
+(6) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+58.8082677165354397 291.0120472440944468 67.4085826771653416 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 277.6927559055118309 Td
+(Testing) Tj
+T* (approach) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+126.2168503937007955 291.0120472440944468 131.8973192515803134 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+131.8861417322834768 277.6927559055118309 Td
+(No test files are evidenced;) Tj
+T* (edge cases and business) Tj
+T* (rules are only represented in) Tj
+T* (implementation code.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+258.1141696452811516 291.0120472440944468 159.3958327188105955 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+263.7834609838637903 277.6927559055118309 Td
+(Add pytest characterization and) Tj
+T* (regression tests that exercise the) Tj
+T* (legacy and rewritten services for) Tj
+T* (equivalent requests.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+417.5100023640918039 291.0120472440944468 135.2503125964302342 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+423.1792937026744426 277.6927559055118309 Td
+(Golden-master style parity) Tj
+T* (testing protects refund) Tj
+T* (approval, audit, fee truncation,) Tj
+T* (negative amount, date) Tj
+T* (exception, and error behavior) Tj
+T* (during the rewrite.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+42.5196850393700814 217.5734645669291183 16.2885826771653548 -83.7885826771653512 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 204.2541732283464171 Td
+(7) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+58.8082677165354397 217.5734645669291183 67.4085826771653416 -83.7885826771653512 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 204.2541732283464171 Td
+(Approval rules) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+126.2168503937007955 217.5734645669291183 131.8973192515803134 -83.7885826771653512 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+131.8861417322834768 204.2541732283464171 Td
+(`approve_refund` enforces) Tj
+T* (threshold, role-list) Tj
+T* (normalization,) Tj
+T* (last-business-day bypass,) Tj
+T* (negative amount effective) Tj
+T* (value handling, and audit) Tj
+T* (insertion.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+258.1141696452811516 217.5734645669291183 159.3958327188105955 -83.7885826771653512 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+263.7834609838637903 204.2541732283464171 Td
+(Extract approval policy into a) Tj
+T* (dedicated module while preserving) Tj
+T* (REQ-007 and REQ-014 exactly.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+417.5100023640918039 217.5734645669291183 135.2503125964302342 -83.7885826771653512 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+423.1792937026744426 204.2541732283464171 Td
+(Separating the policy improves) Tj
+T* (maintainability while preserving) Tj
+T* (the authoritative legacy) Tj
+T* (decision logic.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+42.5196850393700814 133.7848818897637386 16.2885826771653548 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 120.4655905511810943 Td
+(8) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+58.8082677165354397 133.7848818897637386 67.4085826771653416 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 120.4655905511810943 Td
+(Fee) Tj
+T* (calculation) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+126.2168503937007955 133.7848818897637386 131.8973192515803134 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+131.8861417322834768 120.4655905511810943 Td
+(`quote_fee` uses float math,) Tj
+T* (clamps negative amounts to) Tj
+T* (`0.0`, truncates with) Tj
+T* (`int\(\(amount * 0.025\) * 100\) /) Tj
+T* (100.0`, and formats with two) Tj
+T* (decimals.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+258.1141696452811516 133.7848818897637386 159.3958327188105955 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+263.7834609838637903 120.4655905511810943 Td
+(Extract fee calculation into a) Tj
+T* (dedicated module while preserving) Tj
+T* (REQ-022 exactly.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+417.5100023640918039 133.7848818897637386 135.2503125964302342 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+423.1792937026744426 120.4655905511810943 Td
+(The calculation is financially) Tj
+T* (sensitive and must remain) Tj
+T* (byte-for-byte compatible in) Tj
+T* (observable responses.) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.24 G
+1.4173228346456694 w
+0.78 G
+0. w
+0.78 G
+42.5196850393700814 34.0159842519683977 m
+552.7559055118110791 34.0159842519683977 l
+S
+BT
+/F1 7 Tf
+8.0499999999999989 TL
+0.549 g
+42.5196850393700814 28.3466929133857093 Td
+(Generated by SoftwareForge · Aug 14, 2026 at 1:16 PM) Tj
+ET
+BT
+/F1 7 Tf
+8.0499999999999989 TL
+0.549 g
+516.0759055118111291 28.3466929133857093 Td
+(Confidential) Tj
+ET
+BT
+/F1 7 Tf
+8.0499999999999989 TL
+0.549 g
+279.857795275590604 28.3466929133857093 Td
+(Page 3 of 6) Tj
+ET
+endstream
+endobj
+9 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 10 0 R
+>>
+endobj
+10 0 obj
+<<
+/Length 17826
+>>
+stream
+0. w
+0.78 G
+0.94 g
+0.78 G
+0. w
+0.94 g
+42.5196850393700814 801.8899999999999864 16.2885826771653548 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+48.1889763779527627 788.5707086614172567 Td
+(#) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+58.8082677165354397 801.8899999999999864 67.4085826771653416 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+64.477559055118121 788.5707086614172567 Td
+(Area) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+126.2168503937007955 801.8899999999999864 131.8973192515803134 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+131.8861417322834768 788.5707086614172567 Td
+(Current) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+258.1141696452811516 801.8899999999999864 159.3958327188105955 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+263.7834609838637903 788.5707086614172567 Td
+(Proposed) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+417.5100023640918039 801.8899999999999864 135.2503125964302342 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+423.1792937026744426 788.5707086614172567 Td
+(Rationale) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.96 g
+0.78 G
+0. w
+0.96 g
+42.5196850393700814 780.2014173228346863 16.2885826771653548 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 766.8821259842519567 Td
+(9) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+58.8082677165354397 780.2014173228346863 67.4085826771653416 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 766.8821259842519567 Td
+(Audit behavior) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+126.2168503937007955 780.2014173228346863 131.8973192515803134 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+131.8861417322834768 766.8821259842519567 Td
+(Approved refunds insert one) Tj
+T* (SQLite audit row; denied) Tj
+T* (refunds do not; `/audit` returns) Tj
+T* (all or filtered records ordered) Tj
+T* (by `audit_id`.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+258.1141696452811516 780.2014173228346863 159.3958327188105955 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+263.7834609838637903 766.8821259842519567 Td
+(Encapsulate SQLite audit access) Tj
+T* (behind an internal `AuditStore`) Tj
+T* (module while preserving REQ-031) Tj
+T* (semantics exactly.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+417.5100023640918039 780.2014173228346863 135.2503125964302342 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+423.1792937026744426 766.8821259842519567 Td
+(This improves testability) Tj
+T* (without changing audit write) Tj
+T* (timing, fields, action value,) Tj
+T* (timestamp source, filtering, or) Tj
+T* (ordering.) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.78 G
+0. w
+0.24 G
+1.4173228346456694 w
+0.24 G
+1.4173228346456694 w
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0. g
+42.5196850393700814 683.0970866141732358 Td
+(Packages & Dependencies) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+42.5196850393700814 661.5537795275590724 Td
+(Dependency upgrades and vulnerability remediation) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.24 G
+1.4173228346456694 w
+0.94 g
+0.78 G
+0. w
+0.94 g
+42.5196850393700814 647.3805511811023052 16.2885826771653548 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+48.1889763779527627 634.0612598425196893 Td
+(#) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+58.8082677165354397 647.3805511811023052 73.3485826771653535 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+64.477559055118121 634.0612598425196893 Td
+(Area) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+132.1568503937008074 647.3805511811023052 128.2039414174903129 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+137.8261417322834745 634.0612598425196893 Td
+(Current) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+260.3607918111911204 647.3805511811023052 165.5843266958315212 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+266.0300831497738159 634.0612598425196893 Td
+(Proposed) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+425.9451185070226416 647.3805511811023052 126.8151964535891665 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+431.6144098456053371 634.0612598425196893 Td
+(Rationale) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.96 g
+0.78 G
+0. w
+0.96 g
+42.5196850393700814 625.6919685039370052 16.2885826771653548 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 612.3726771653542755 Td
+(1) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+58.8082677165354397 625.6919685039370052 73.3485826771653535 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 612.3726771653542755 Td
+(Runtime) Tj
+T* (dependencies) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+132.1568503937008074 625.6919685039370052 128.2039414174903129 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+137.8261417322834745 612.3726771653542755 Td
+(The service intentionally uses) Tj
+T* (only Python standard-library) Tj
+T* (modules and has no) Tj
+T* (`requirements.txt` or) Tj
+T* (dependency manifest.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+260.3607918111911204 625.6919685039370052 165.5843266958315212 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+266.0300831497738159 612.3726771653542755 Td
+(Preserve zero external runtime) Tj
+T* (dependencies and document that) Tj
+T* (constraint in `pyproject.toml` or project) Tj
+T* (documentation.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+425.9451185070226416 625.6919685039370052 126.8151964535891665 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+431.6144098456053371 612.3726771653542755 Td
+(Keeping runtime) Tj
+T* (dependency-free supports) Tj
+T* (branch-office operation and) Tj
+T* (avoids introducing new) Tj
+T* (deployment requirements.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+42.5196850393700814 562.6033858267716141 16.2885826771653548 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 549.2840944881888845 Td
+(2) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+58.8082677165354397 562.6033858267716141 73.3485826771653535 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 549.2840944881888845 Td
+(Python) Tj
+T* (standard-library) Tj
+T* (HTTP modules) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+132.1568503937008074 562.6033858267716141 128.2039414174903129 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+137.8261417322834745 549.2840944881888845 Td
+(Python 2 modules) Tj
+T* (`BaseHTTPServer`,) Tj
+T* (`SocketServer`, and) Tj
+T* (`urlparse` are attempted) Tj
+T* (before Python 3 fallbacks.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+260.3607918111911204 562.6033858267716141 165.5843266958315212 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+266.0300831497738159 549.2840944881888845 Td
+(Use Python 3 standard-library modules) Tj
+T* (`http.server`, `socketserver`, and) Tj
+T* (`urllib.parse` after parity tests pass.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+425.9451185070226416 562.6033858267716141 126.8151964535891665 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+431.6144098456053371 549.2840944881888845 Td
+(This removes obsolete) Tj
+T* (compatibility paths while) Tj
+T* (preserving the current) Tj
+T* (standard-library architecture.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+42.5196850393700814 499.5148031496062799 16.2885826771653548 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 486.1955118110236072 Td
+(3) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+58.8082677165354397 499.5148031496062799 73.3485826771653535 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 486.1955118110236072 Td
+(SQLite access) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+132.1568503937008074 499.5148031496062799 128.2039414174903129 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+137.8261417322834745 486.1955118110236072 Td
+(The service uses Python) Tj
+T* (standard-library `sqlite3`) Tj
+T* (directly through a) Tj
+T* (module-global connection) Tj
+T* (and `threading.RLock`.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+260.3607918111911204 499.5148031496062799 165.5843266958315212 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+266.0300831497738159 486.1955118110236072 Td
+(Continue using standard-library) Tj
+T* (`sqlite3`, but wrap it in a small internal) Tj
+T* (audit-store module with the same) Tj
+T* (connection, lock, timeout, schema, and) Tj
+T* (query behavior.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+425.9451185070226416 499.5148031496062799 126.8151964535891665 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+431.6144098456053371 486.1955118110236072 Td
+(This avoids adding an ORM) Tj
+T* (or new database) Tj
+T* (dependency while improving) Tj
+T* (isolation for tests.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+42.5196850393700814 436.4262204724409457 16.2885826771653548 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 423.106929133858273 Td
+(4) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+58.8082677165354397 436.4262204724409457 73.3485826771653535 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 423.106929133858273 Td
+(Testing) Tj
+T* (package) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+132.1568503937008074 436.4262204724409457 128.2039414174903129 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+137.8261417322834745 423.106929133858273 Td
+(No test framework is) Tj
+T* (evidenced.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+260.3607918111911204 436.4262204724409457 165.5843266958315212 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+266.0300831497738159 423.106929133858273 Td
+(Add `pytest` as a development-only) Tj
+T* (dependency, pinned to a stable major) Tj
+T* (such as `pytest>=8,<9` unless project) Tj
+T* (policy requires stricter pinning.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+425.9451185070226416 436.4262204724409457 126.8151964535891665 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+431.6144098456053371 423.106929133858273 Td
+(Pytest supports concise) Tj
+T* (characterization tests while) Tj
+T* (adding no runtime) Tj
+T* (dependency to the deployed) Tj
+T* (service.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+42.5196850393700814 373.3376377952755547 16.2885826771653548 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 360.0183464566929388 Td
+(5) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+58.8082677165354397 373.3376377952755547 73.3485826771653535 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 360.0183464566929388 Td
+(Contract) Tj
+T* (fixtures) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+132.1568503937008074 373.3376377952755547 128.2039414174903129 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+137.8261417322834745 360.0183464566929388 Td
+(No schema files, golden) Tj
+T* (responses, or request) Tj
+T* (fixtures are evidenced.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+260.3607918111911204 373.3376377952755547 165.5843266958315212 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+266.0300831497738159 360.0183464566929388 Td
+(Add repository-local JSON fixtures for) Tj
+T* (known legacy requests and responses) Tj
+T* (rather than introducing a runtime) Tj
+T* (schema package.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+425.9451185070226416 373.3376377952755547 126.8151964535891665 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+431.6144098456053371 360.0183464566929388 Td
+(Fixtures document observed) Tj
+T* (behavior and reduce the) Tj
+T* (chance of accidental) Tj
+T* (response-shape drift.) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.78 G
+0. w
+0.24 G
+1.4173228346456694 w
+0.24 G
+1.4173228346456694 w
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0. g
+42.5196850393700814 286.5833070866142407 Td
+(Infrastructure) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+42.5196850393700814 265.0400000000000773 Td
+(Hosting, orchestration, and platform modernization) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.24 G
+1.4173228346456694 w
+0.94 g
+0.78 G
+0. w
+0.94 g
+42.5196850393700814 250.8667716535433385 16.2885826771653548 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+48.1889763779527627 237.5474803149606942 Td
+(#) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+58.8082677165354397 250.8667716535433385 62.4585826771653601 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+64.477559055118121 237.5474803149606942 Td
+(Area) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+121.2668503937007927 250.8667716535433385 158.3985826771653365 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+126.9361417322834598 237.5474803149606942 Td
+(Current) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+279.6654330708660723 250.8667716535433385 160.6960310538486283 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+285.3347244094487678 237.5474803149606942 Td
+(Proposed) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+440.3614641247147006 250.8667716535433385 112.3988508357922314 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+446.0307554632973392 237.5474803149606942 Td
+(Rationale) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.96 g
+0.78 G
+0. w
+0.96 g
+42.5196850393700814 229.1781889763779532 16.2885826771653548 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 215.8588976377952804 Td
+(1) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+58.8082677165354397 229.1781889763779532 62.4585826771653601 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 215.8588976377952804 Td
+(Deployment) Tj
+T* (model) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+121.2668503937007927 229.1781889763779532 158.3985826771653365 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+126.9361417322834598 215.8588976377952804 Td
+(Standalone threaded Python HTTP) Tj
+T* (service started by CLI with `--bind`,) Tj
+T* (`--port`, `--database`, and `--debug`.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+279.6654330708660723 229.1781889763779532 160.6960310538486283 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+285.3347244094487678 215.8588976377952804 Td
+(Preserve the same standalone) Tj
+T* (startup model and CLI/environment) Tj
+T* (configuration surface.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+440.3614641247147006 229.1781889763779532 112.3988508357922314 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+446.0307554632973392 215.8588976377952804 Td
+(The rewrite must not) Tj
+T* (introduce containers,) Tj
+T* (orchestrators, managed) Tj
+T* (platforms, or other new) Tj
+T* (infrastructure) Tj
+T* (requirements.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+42.5196850393700814 155.7396062992125962 16.2885826771653548 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 142.4203149606299803 Td
+(2) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+58.8082677165354397 155.7396062992125962 62.4585826771653601 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 142.4203149606299803 Td
+(Runtime) Tj
+T* (configuration) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+121.2668503937007927 155.7396062992125962 158.3985826771653365 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+126.9361417322834598 142.4203149606299803 Td
+(`PORT` and `REFUND_DB`) Tj
+T* (environment variables are supported,) Tj
+T* (with defaults of port `8080` and) Tj
+T* (database `:memory:`.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+279.6654330708660723 155.7396062992125962 160.6960310538486283 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+285.3347244094487678 142.4203149606299803 Td
+(Preserve existing defaults and) Tj
+T* (document their behavior, including) Tj
+T* (the non-durable nature of `:memory:`) Tj
+T* (audit storage.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+440.3614641247147006 155.7396062992125962 112.3988508357922314 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+446.0307554632973392 142.4203149606299803 Td
+(Documentation improves) Tj
+T* (operator clarity without) Tj
+T* (changing startup) Tj
+T* (behavior or audit) Tj
+T* (semantics.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+42.5196850393700814 92.6510236220471768 16.2885826771653548 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 79.3317322834644756 Td
+(3) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+58.8082677165354397 92.6510236220471768 62.4585826771653601 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 79.3317322834644756 Td
+(Network) Tj
+T* (binding) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+121.2668503937007927 92.6510236220471768 158.3985826771653365 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+126.9361417322834598 79.3317322834644756 Td
+(Default bind address is `0.0.0.0`, with) Tj
+T* (override through `--bind`.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+279.6654330708660723 92.6510236220471768 160.6960310538486283 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+285.3347244094487678 79.3317322834644756 Td
+(Preserve the current bind default and) Tj
+T* (override behavior, while documenting) Tj
+T* (operational assumptions and risks.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+440.3614641247147006 92.6510236220471768 112.3988508357922314 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+446.0307554632973392 79.3317322834644756 Td
+(Changing the default bind) Tj
+T* (could break legacy) Tj
+T* (deployments, so the) Tj
+T* (behavior-preserving) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.24 G
+1.4173228346456694 w
+0.78 G
+0. w
+0.78 G
+42.5196850393700814 34.0159842519683977 m
+552.7559055118110791 34.0159842519683977 l
+S
+BT
+/F1 7 Tf
+8.0499999999999989 TL
+0.549 g
+42.5196850393700814 28.3466929133857093 Td
+(Generated by SoftwareForge · Aug 14, 2026 at 1:16 PM) Tj
+ET
+BT
+/F1 7 Tf
+8.0499999999999989 TL
+0.549 g
+516.0759055118111291 28.3466929133857093 Td
+(Confidential) Tj
+ET
+BT
+/F1 7 Tf
+8.0499999999999989 TL
+0.549 g
+279.857795275590604 28.3466929133857093 Td
+(Page 4 of 6) Tj
+ET
+endstream
+endobj
+11 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 12 0 R
+>>
+endobj
+12 0 obj
+<<
+/Length 19607
+>>
+stream
+0. w
+0.78 G
+0.94 g
+0.78 G
+0. w
+0.94 g
+42.5196850393700814 801.8899999999999864 16.2885826771653548 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+48.1889763779527627 788.5707086614172567 Td
+(#) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+58.8082677165354397 801.8899999999999864 62.4585826771653601 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+64.477559055118121 788.5707086614172567 Td
+(Area) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+121.2668503937007927 801.8899999999999864 158.3985826771653365 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+126.9361417322834598 788.5707086614172567 Td
+(Current) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+279.6654330708660723 801.8899999999999864 160.6960310538486283 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+285.3347244094487678 788.5707086614172567 Td
+(Proposed) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+440.3614641247147006 801.8899999999999864 112.3988508357922314 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+446.0307554632973392 788.5707086614172567 Td
+(Rationale) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.96 g
+0.78 G
+0. w
+0.96 g
+42.5196850393700814 780.2014173228346863 16.2885826771653548 -21.6885826771653534 re
+f
+0.96 g
+0.78 G
+0. w
+0.96 g
+58.8082677165354397 780.2014173228346863 62.4585826771653601 -21.6885826771653534 re
+f
+0.96 g
+0.78 G
+0. w
+0.96 g
+121.2668503937007927 780.2014173228346863 158.3985826771653365 -21.6885826771653534 re
+f
+0.96 g
+0.78 G
+0. w
+0.96 g
+279.6654330708660723 780.2014173228346863 160.6960310538486283 -21.6885826771653534 re
+f
+0.96 g
+0.78 G
+0. w
+0.96 g
+440.3614641247147006 780.2014173228346863 112.3988508357922314 -21.6885826771653534 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+446.0307554632973392 766.8821259842519567 Td
+(rewrite should not alter it.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+42.5196850393700814 758.5128346456692725 16.2885826771653548 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 745.1935433070866566 Td
+(4) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+58.8082677165354397 758.5128346456692725 62.4585826771653601 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 745.1935433070866566 Td
+(Health) Tj
+T* (endpoint) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+121.2668503937007927 758.5128346456692725 158.3985826771653365 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+126.9361417322834598 745.1935433070866566 Td
+(`GET /health` returns static JSON) Tj
+T* (`{"service":"refund-fee","status":"ok"}`) Tj
+T* (with HTTP 200.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+279.6654330708660723 758.5128346456692725 160.6960310538486283 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+285.3347244094487678 745.1935433070866566 Td
+(Preserve the exact route, status) Tj
+T* (code, and JSON response shape.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+440.3614641247147006 758.5128346456692725 112.3988508357922314 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+446.0307554632973392 745.1935433070866566 Td
+(Health behavior may be) Tj
+T* (consumed by legacy) Tj
+T* (scripts or monitors and) Tj
+T* (must remain compatible.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+42.5196850393700814 705.7742519685039042 16.2885826771653548 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 692.4549606299212883 Td
+(5) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+58.8082677165354397 705.7742519685039042 62.4585826771653601 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 692.4549606299212883 Td
+(Diagnostics) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+121.2668503937007927 705.7742519685039042 158.3985826771653365 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+126.9361417322834598 692.4549606299212883 Td
+(Standard-library logging records) Tj
+T* (requests through `log_message` and) Tj
+T* (startup through `run`; debug mode) Tj
+T* (adjusts log level.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+279.6654330708660723 705.7742519685039042 160.6960310538486283 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+285.3347244094487678 692.4549606299212883 Td
+(Keep standard-library logging and) Tj
+T* (add only behavior-neutral diagnostic) Tj
+T* (clarification, such as clearer startup) Tj
+T* (logs for configured bind, port,) Tj
+T* (database mode, and debug state.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+440.3614641247147006 705.7742519685039042 112.3988508357922314 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+446.0307554632973392 692.4549606299212883 Td
+(Basic diagnostics help) Tj
+T* (support the rewrite) Tj
+T* (without changing APIs,) Tj
+T* (persistence semantics, or) Tj
+T* (deployment) Tj
+T* (requirements.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+42.5196850393700814 632.3356692913384904 16.2885826771653548 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 619.0163779527558745 Td
+(6) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+58.8082677165354397 632.3356692913384904 62.4585826771653601 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 619.0163779527558745 Td
+(CI/CD) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+121.2668503937007927 632.3356692913384904 158.3985826771653365 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+126.9361417322834598 619.0163779527558745 Td
+(No CI/CD configuration is evidenced.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+279.6654330708660723 632.3356692913384904 160.6960310538486283 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+285.3347244094487678 619.0163779527558745 Td
+(Do not add CI/CD requirements as) Tj
+T* (part of this modernization intent.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+440.3614641247147006 632.3356692913384904 112.3988508357922314 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+446.0307554632973392 619.0163779527558745 Td
+(This follows the binding) Tj
+T* (constraint to avoid new) Tj
+T* (delivery infrastructure) Tj
+T* (requirements.) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.78 G
+0. w
+0.24 G
+1.4173228346456694 w
+0.24 G
+1.4173228346456694 w
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0. g
+42.5196850393700814 545.5813385826770627 Td
+(Technical Capabilities) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+42.5196850393700814 524.038031496063013 Td
+(New capabilities unlocked by modernization) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.24 G
+1.4173228346456694 w
+0.94 g
+0.78 G
+0. w
+0.94 g
+42.5196850393700814 509.8648031496063027 16.2885826771653548 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+48.1889763779527627 496.5455118110236299 Td
+(#) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+58.8082677165354397 509.8648031496063027 67.9485826771653478 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+64.477559055118121 496.5455118110236299 Td
+(Area) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+126.7568503937008018 509.8648031496063027 153.0358680278634154 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+132.4261417322834689 496.5455118110236299 Td
+(Current) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+279.7927184215642455 509.8648031496063027 150.8499582027301926 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+285.4620097601468842 496.5455118110236299 Td
+(Proposed) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+430.6426766242944382 509.8648031496063027 122.1176383362888345 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+436.3119679628771337 496.5455118110236299 Td
+(Rationale) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.96 g
+0.78 G
+0. w
+0.96 g
+42.5196850393700814 488.1762204724408889 16.2885826771653548 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 474.856929133858273 Td
+(1) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+58.8082677165354397 488.1762204724408889 67.9485826771653478 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 474.856929133858273 Td
+(Behavioral) Tj
+T* (parity) Tj
+T* (verification) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+126.7568503937008018 488.1762204724408889 153.0358680278634154 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+132.4261417322834689 474.856929133858273 Td
+(Compatibility is inferred manually) Tj
+T* (from the single source file.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+279.7927184215642455 488.1762204724408889 150.8499582027301926 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+285.4620097601468842 474.856929133858273 Td
+(Use legacy-service execution as) Tj
+T* (the authoritative oracle for parity) Tj
+T* (tests across routes, status codes,) Tj
+T* (JSON bodies, and side effects.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+430.6426766242944382 488.1762204724408889 122.1176383362888345 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+436.3119679628771337 474.856929133858273 Td
+(This operationalizes) Tj
+T* (REQ-001 and makes) Tj
+T* (compatibility measurable.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+42.5196850393700814 435.4376377952755774 16.2885826771653548 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 422.1183464566929615 Td
+(2) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+58.8082677165354397 435.4376377952755774 67.9485826771653478 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 422.1183464566929615 Td
+(Refund) Tj
+T* (approval) Tj
+T* (compatibility) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+126.7568503937008018 435.4376377952755774 153.0358680278634154 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+132.4261417322834689 422.1183464566929615 Td
+(REQ-007 behavior is implemented) Tj
+T* (directly in `approve_refund`,) Tj
+T* (including required fields, optional) Tj
+T* (fields, validation, response fields,) Tj
+T* (and status behavior.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+279.7927184215642455 435.4376377952755774 150.8499582027301926 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+285.4620097601468842 422.1183464566929615 Td
+(Codify REQ-007 in documentation) Tj
+T* (and characterization tests without) Tj
+T* (changing endpoint behavior.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+430.6426766242944382 435.4376377952755774 122.1176383362888345 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+436.3119679628771337 422.1183464566929615 Td
+(This protects the) Tj
+T* (settlement-console) Tj
+T* (approval contract during) Tj
+T* (modularization.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+42.5196850393700814 372.3490551181102433 16.2885826771653548 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 359.0297637795276273 Td
+(3) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+58.8082677165354397 372.3490551181102433 67.9485826771653478 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 359.0297637795276273 Td
+(Threshold and) Tj
+T* (date) Tj
+T* (exception) Tj
+T* (compatibility) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+126.7568503937008018 372.3490551181102433 153.0358680278634154 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+132.4261417322834689 359.0297637795276273 Td
+(REQ-014 logic uses `AUTH_LIMIT) Tj
+T* (= 500`, `int\(effective\) >) Tj
+T* (AUTH_LIMIT`, `finance_admin`,) Tj
+T* (and last-business-day bypass.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+279.7927184215642455 372.3490551181102433 150.8499582027301926 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+285.4620097601468842 359.0297637795276273 Td
+(Capture REQ-014 as explicit tests) Tj
+T* (for below-threshold,) Tj
+T* (above-threshold,) Tj
+T* (finance-admin-present,) Tj
+T* (finance-admin-missing, and) Tj
+T* (last-business-day cases.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+430.6426766242944382 372.3490551181102433 122.1176383362888345 -73.4385826771653569 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+436.3119679628771337 359.0297637795276273 Td
+(These rules drive approval) Tj
+T* (outcomes and are high-risk) Tj
+T* (if reimplemented informally.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+42.5196850393700814 298.9104724409448863 16.2885826771653548 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 285.5911811023622704 Td
+(4) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+58.8082677165354397 298.9104724409448863 67.9485826771653478 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 285.5911811023622704 Td
+(Fee) Tj
+T* (calculation) Tj
+T* (compatibility) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+126.7568503937008018 298.9104724409448863 153.0358680278634154 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+132.4261417322834689 285.5911811023622704 Td
+(REQ-022 behavior uses legacy) Tj
+T* (float math, truncation, two-decimal) Tj
+T* (display formatting, `USD`, and) Tj
+T* (negative amount normalization.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+279.7927184215642455 298.9104724409448863 150.8499582027301926 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+285.4620097601468842 285.5911811023622704 Td
+(Lock REQ-022 with regression) Tj
+T* (tests using representative decimal,) Tj
+T* (large, zero, and negative amounts.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+430.6426766242944382 298.9104724409448863 122.1176383362888345 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+436.3119679628771337 285.5911811023622704 Td
+(Fee results must remain) Tj
+T* (settlement-compatible even) Tj
+T* (where decimal arithmetic) Tj
+T* (might appear more modern.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+42.5196850393700814 246.1718897637795465 16.2885826771653548 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 232.8525984251969021 Td
+(5) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+58.8082677165354397 246.1718897637795465 67.9485826771653478 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 232.8525984251969021 Td
+(Audit) Tj
+T* (compatibility) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+126.7568503937008018 246.1718897637795465 153.0358680278634154 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+132.4261417322834689 232.8525984251969021 Td
+(REQ-031 behavior writes audit only) Tj
+T* (for approved refunds and returns) Tj
+T* (audit records as `{"records":[...]}`) Tj
+T* (ordered by `audit_id`.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+279.7927184215642455 246.1718897637795465 150.8499582027301926 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+285.4620097601468842 232.8525984251969021 Td
+(Test audit insertion, denial no-write) Tj
+T* (behavior, timestamp source, action) Tj
+T* (value, unfiltered lookup, filtered) Tj
+T* (lookup, and ordering.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+430.6426766242944382 246.1718897637795465 122.1176383362888345 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+436.3119679628771337 232.8525984251969021 Td
+(Audit semantics are a key) Tj
+T* (observable side effect and) Tj
+T* (must survive refactoring) Tj
+T* (unchanged.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+42.5196850393700814 193.4333070866142066 16.2885826771653548 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 180.1140157480315338 Td
+(6) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+58.8082677165354397 193.4333070866142066 67.9485826771653478 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 180.1140157480315338 Td
+(Legacy route) Tj
+T* (compatibility) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+126.7568503937008018 193.4333070866142066 153.0358680278634154 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+132.4261417322834689 180.1140157480315338 Td
+(Routes are `/health`, `/audit`,) Tj
+T* (`/refunds/approve`, and) Tj
+T* (`/fees/quote`; unknown routes) Tj
+T* (return `404` problem JSON.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+279.7927184215642455 193.4333070866142066 150.8499582027301926 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+285.4620097601468842 180.1140157480315338 Td
+(Add route-level tests covering) Tj
+T* (existing paths, methods, unknown) Tj
+T* (routes, and existing problem) Tj
+T* (response shapes.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+430.6426766242944382 193.4333070866142066 122.1176383362888345 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+436.3119679628771337 180.1140157480315338 Td
+(This prevents accidental) Tj
+T* (routing or status-code drift) Tj
+T* (during transport refactoring.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+42.5196850393700814 140.6947244094488951 16.2885826771653548 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 127.3754330708662792 Td
+(7) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+58.8082677165354397 140.6947244094488951 67.9485826771653478 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 127.3754330708662792 Td
+(Validation) Tj
+T* (behavior) Tj
+T* (clarity) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+126.7568503937008018 140.6947244094488951 153.0358680278634154 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+132.4261417322834689 127.3754330708662792 Td
+(Bad request behavior is spread) Tj
+T* (across body parsing, text cleaning,) Tj
+T* (amount parsing, date parsing, and) Tj
+T* (role normalization helpers.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+279.7927184215642455 140.6947244094488951 150.8499582027301926 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+285.4620097601468842 127.3754330708662792 Td
+(Document and test existing) Tj
+T* (validation messages and `400`) Tj
+T* (error shapes as observed from) Tj
+T* (legacy execution.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+430.6426766242944382 140.6947244094488951 122.1176383362888345 -63.0885826771653555 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+436.3119679628771337 127.3754330708662792 Td
+(Legacy clients may depend) Tj
+T* (on specific failure behavior,) Tj
+T* (so validation must be) Tj
+T* (preserved unless explicitly) Tj
+T* (versioned later.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+42.5196850393700814 77.6061417322835467 16.2885826771653548 -32.0385826771653512 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 64.2868503937007745 Td
+(8) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+58.8082677165354397 77.6061417322835467 67.9485826771653478 -32.0385826771653512 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 64.2868503937007745 Td
+(Maintainability) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+126.7568503937008018 77.6061417322835467 153.0358680278634154 -32.0385826771653512 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+132.4261417322834689 64.2868503937007745 Td
+(All behavior lives in one file,) Tj
+T* (increasing context switching for) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+279.7927184215642455 77.6061417322835467 150.8499582027301926 -32.0385826771653512 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+285.4620097601468842 64.2868503937007745 Td
+(Enable isolated maintenance of) Tj
+T* (transport, validation, policy, fees,) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+430.6426766242944382 77.6061417322835467 122.1176383362888345 -32.0385826771653512 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+436.3119679628771337 64.2868503937007745 Td
+(The rewrite improves) Tj
+T* (internal clarity while) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.24 G
+1.4173228346456694 w
+0.78 G
+0. w
+0.78 G
+42.5196850393700814 34.0159842519683977 m
+552.7559055118110791 34.0159842519683977 l
+S
+BT
+/F1 7 Tf
+8.0499999999999989 TL
+0.549 g
+42.5196850393700814 28.3466929133857093 Td
+(Generated by SoftwareForge · Aug 14, 2026 at 1:16 PM) Tj
+ET
+BT
+/F1 7 Tf
+8.0499999999999989 TL
+0.549 g
+516.0759055118111291 28.3466929133857093 Td
+(Confidential) Tj
+ET
+BT
+/F1 7 Tf
+8.0499999999999989 TL
+0.549 g
+279.857795275590604 28.3466929133857093 Td
+(Page 5 of 6) Tj
+ET
+endstream
+endobj
+13 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 14 0 R
+>>
+endobj
+14 0 obj
+<<
+/Length 12263
+>>
+stream
+0. w
+0.78 G
+0.94 g
+0.78 G
+0. w
+0.94 g
+42.5196850393700814 801.8899999999999864 16.2885826771653548 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+48.1889763779527627 788.5707086614172567 Td
+(#) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+58.8082677165354397 801.8899999999999864 67.9485826771653478 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+64.477559055118121 788.5707086614172567 Td
+(Area) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+126.7568503937008018 801.8899999999999864 153.0358680278634154 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+132.4261417322834689 788.5707086614172567 Td
+(Current) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+279.7927184215642455 801.8899999999999864 150.8499582027301926 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+285.4620097601468842 788.5707086614172567 Td
+(Proposed) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+430.6426766242944382 801.8899999999999864 122.1176383362888345 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+436.3119679628771337 788.5707086614172567 Td
+(Rationale) Tj
+ET
+0.24 G
+1.4173228346456694 w
+1. g
+0.78 G
+0. w
+1. g
+42.5196850393700814 780.2014173228346863 16.2885826771653548 -42.3885826771653598 re
+f
+1. g
+0.78 G
+0. w
+1. g
+58.8082677165354397 780.2014173228346863 67.9485826771653478 -42.3885826771653598 re
+f
+1. g
+0.78 G
+0. w
+1. g
+126.7568503937008018 780.2014173228346863 153.0358680278634154 -42.3885826771653598 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+132.4261417322834689 766.8821259842519567 Td
+(small changes.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+279.7927184215642455 780.2014173228346863 150.8499582027301926 -42.3885826771653598 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+285.4620097601468842 766.8821259842519567 Td
+(audit store, and runtime code) Tj
+T* (through behavior-preserving) Tj
+T* (modules.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+430.6426766242944382 780.2014173228346863 122.1176383362888345 -42.3885826771653598 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+436.3119679628771337 766.8821259842519567 Td
+(keeping the external API) Tj
+T* (and side effects) Tj
+T* (unchanged.) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.78 G
+0. w
+0.24 G
+1.4173228346456694 w
+0.24 G
+1.4173228346456694 w
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0. g
+42.5196850393700814 703.7970866141731676 Td
+(Risk Register) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+42.5196850393700814 682.2537795275590042 Td
+(Top risks for this modernization effort) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.24 G
+1.4173228346456694 w
+0.94 g
+0.78 G
+0. w
+0.94 g
+42.5196850393700814 668.0805511811023507 16.2885826771653548 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+48.1889763779527627 654.7612598425196211 Td
+(#) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+58.8082677165354397 668.0805511811023507 53.5485826771653635 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+64.477559055118121 654.7612598425196211 Td
+(Area) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+112.3568503937007961 668.0805511811023507 165.2693058467788774 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+118.0261417322834774 654.7612598425196211 Td
+(Risk) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+277.626156240479645 668.0805511811023507 56.2485826771653521 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+283.2954475790623405 654.7612598425196211 Td
+(Likelihood) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+333.8747389176450042 668.0805511811023507 43.1085826771653586 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+339.5440302562276997 654.7612598425196211 Td
+(Impact) Tj
+ET
+0.94 g
+0.78 G
+0. w
+0.94 g
+376.9833215948103771 668.0805511811023507 175.7769933658210562 -21.6885826771653534 re
+f
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.078 g
+382.6526129333930726 654.7612598425196211 Td
+(Mitigation) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.96 g
+0.78 G
+0. w
+0.96 g
+42.5196850393700814 646.3919685039369369 16.2885826771653548 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 633.072677165354321 Td
+(1) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+58.8082677165354397 646.3919685039369369 53.5485826771653635 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 633.072677165354321 Td
+(Behavior) Tj
+T* (parity) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+112.3568503937007961 646.3919685039369369 165.2693058467788774 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+118.0261417322834774 633.072677165354321 Td
+(The rewrite may unintentionally) Tj
+T* (change status codes, JSON key) Tj
+T* (ordering, response shapes, validation) Tj
+T* (messages, or route behavior.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+277.626156240479645 646.3919685039369369 56.2485826771653521 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+283.2954475790623405 633.072677165354321 Td
+(high) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+333.8747389176450042 646.3919685039369369 43.1085826771653586 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+339.5440302562276997 633.072677165354321 Td
+(high) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+376.9833215948103771 646.3919685039369369 175.7769933658210562 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+382.6526129333930726 633.072677165354321 Td
+(Run golden-master tests against the) Tj
+T* (legacy service and treat legacy execution) Tj
+T* (as the final authority for parity.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+42.5196850393700814 593.6533858267716823 16.2885826771653548 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 580.3340944881889527 Td
+(2) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+58.8082677165354397 593.6533858267716823 53.5485826771653635 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 580.3340944881889527 Td
+(Refund) Tj
+T* (approval) Tj
+T* (rules) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+112.3568503937007961 593.6533858267716823 165.2693058467788774 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+118.0261417322834774 580.3340944881889527 Td
+(Threshold, `finance_admin`,) Tj
+T* (last-business-day, role normalization,) Tj
+T* (or negative amount behavior could be) Tj
+T* (reimplemented incorrectly.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+277.626156240479645 593.6533858267716823 56.2485826771653521 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+283.2954475790623405 580.3340944881889527 Td
+(medium) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+333.8747389176450042 593.6533858267716823 43.1085826771653586 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+339.5440302562276997 580.3340944881889527 Td
+(high) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+376.9833215948103771 593.6533858267716823 175.7769933658210562 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+382.6526129333930726 580.3340944881889527 Td
+(Implement REQ-007 and REQ-014 as) Tj
+T* (mandatory characterization tests before) Tj
+T* (refactoring approval code.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+42.5196850393700814 540.914803149606314 16.2885826771653548 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 527.5955118110236981 Td
+(3) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+58.8082677165354397 540.914803149606314 53.5485826771653635 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 527.5955118110236981 Td
+(Fee) Tj
+T* (calculation) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+112.3568503937007961 540.914803149606314 165.2693058467788774 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+118.0261417322834774 527.5955118110236981 Td
+(A developer may replace legacy float) Tj
+T* (truncation with rounded decimal) Tj
+T* (arithmetic, changing settlement-visible) Tj
+T* (fee values.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+277.626156240479645 540.914803149606314 56.2485826771653521 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+283.2954475790623405 527.5955118110236981 Td
+(medium) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+333.8747389176450042 540.914803149606314 43.1085826771653586 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+339.5440302562276997 527.5955118110236981 Td
+(high) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+376.9833215948103771 540.914803149606314 175.7769933658210562 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+382.6526129333930726 527.5955118110236981 Td
+(Preserve the exact REQ-022 formula and) Tj
+T* (add regression cases for values that) Tj
+T* (distinguish truncation from rounding.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+42.5196850393700814 488.1762204724410026 16.2885826771653548 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 474.8569291338583298 Td
+(4) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+58.8082677165354397 488.1762204724410026 53.5485826771653635 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 474.8569291338583298 Td
+(Audit) Tj
+T* (semantics) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+112.3568503937007961 488.1762204724410026 165.2693058467788774 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+118.0261417322834774 474.8569291338583298 Td
+(Modularizing persistence may alter) Tj
+T* (audit write timing, denied-refund) Tj
+T* (no-write behavior, timestamp source,) Tj
+T* (filtering, or ordering.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+277.626156240479645 488.1762204724410026 56.2485826771653521 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+283.2954475790623405 474.8569291338583298 Td
+(medium) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+333.8747389176450042 488.1762204724410026 43.1085826771653586 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+339.5440302562276997 474.8569291338583298 Td
+(high) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+376.9833215948103771 488.1762204724410026 175.7769933658210562 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+382.6526129333930726 474.8569291338583298 Td
+(Create audit parity tests for approved) Tj
+T* (writes, denied no-writes,) Tj
+T* (`refund.approved`, submitted timestamp) Tj
+T* (usage, filtering, and `audit_id` ordering.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+42.5196850393700814 435.4376377952756343 16.2885826771653548 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+48.1889763779527627 422.1183464566930184 Td
+(5) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+58.8082677165354397 435.4376377952756343 53.5485826771653635 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+64.477559055118121 422.1183464566930184 Td
+(Python 3) Tj
+T* (migration) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+112.3568503937007961 435.4376377952756343 165.2693058467788774 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+118.0261417322834774 422.1183464566930184 Td
+(Bytes/text handling, URL parsing,) Tj
+T* (JSON decoding, or standard-library) Tj
+T* (HTTP behavior may differ after) Tj
+T* (removing Python 2 compatibility.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+277.626156240479645 435.4376377952756343 56.2485826771653521 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+283.2954475790623405 422.1183464566930184 Td
+(medium) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+333.8747389176450042 435.4376377952756343 43.1085826771653586 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+339.5440302562276997 422.1183464566930184 Td
+(medium) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+376.9833215948103771 435.4376377952756343 175.7769933658210562 -52.7385826771653541 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+382.6526129333930726 422.1183464566930184 Td
+(Migrate one boundary at a time and) Tj
+T* (compare legacy and rewritten HTTP) Tj
+T* (responses for valid, malformed, and) Tj
+T* (edge-case requests.) Tj
+ET
+0.24 G
+1.4173228346456694 w
+0.78 G
+0. w
+0.24 G
+1.4173228346456694 w
+0.24 G
+1.4173228346456694 w
+0.78 G
+42.5196850393700814 34.0159842519683977 m
+552.7559055118110791 34.0159842519683977 l
+S
+BT
+/F1 7 Tf
+8.0499999999999989 TL
+0.549 g
+42.5196850393700814 28.3466929133857093 Td
+(Generated by SoftwareForge · Aug 14, 2026 at 1:16 PM) Tj
+ET
+BT
+/F1 7 Tf
+8.0499999999999989 TL
+0.549 g
+516.0759055118111291 28.3466929133857093 Td
+(Confidential) Tj
+ET
+BT
+/F1 7 Tf
+8.0499999999999989 TL
+0.549 g
+279.857795275590604 28.3466929133857093 Td
+(Page 6 of 6) Tj
+ET
+endstream
+endobj
+1 0 obj
+<</Type /Pages
+/Kids [3 0 R 5 0 R 7 0 R 9 0 R 11 0 R 13 0 R ]
+/Count 6
+>>
+endobj
+15 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+16 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+17 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-Oblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+18 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-BoldOblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+19 0 obj
+<<
+/Type /Font
+/BaseFont /Courier
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+20 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+21 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-Oblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+22 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-BoldOblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+23 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Roman
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+24 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+25 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Italic
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+26 0 obj
+<<
+/Type /Font
+/BaseFont /Times-BoldItalic
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+27 0 obj
+<<
+/Type /Font
+/BaseFont /ZapfDingbats
+/Subtype /Type1
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+28 0 obj
+<<
+/Type /Font
+/BaseFont /Symbol
+/Subtype /Type1
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+2 0 obj
+<<
+/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
+/Font <<
+/F1 15 0 R
+/F2 16 0 R
+/F3 17 0 R
+/F4 18 0 R
+/F5 19 0 R
+/F6 20 0 R
+/F7 21 0 R
+/F8 22 0 R
+/F9 23 0 R
+/F10 24 0 R
+/F11 25 0 R
+/F12 26 0 R
+/F13 27 0 R
+/F14 28 0 R
+>>
+/XObject <<
+>>
+>>
+endobj
+29 0 obj
+<<
+/Producer (jsPDF 4.2.1)
+/CreationDate (D:20260814131754-07'00')
+>>
+endobj
+30 0 obj
+<<
+/Type /Catalog
+/Pages 1 0 R
+/OpenAction [3 0 R /FitH null]
+/PageLayout /OneColumn
+>>
+endobj
+xref
+0 31
+0000000000 65535 f 
+0000080708 00000 n 
+0000082562 00000 n 
+0000000015 00000 n 
+0000000152 00000 n 
+0000005414 00000 n 
+0000005551 00000 n 
+0000015546 00000 n 
+0000015683 00000 n 
+0000030434 00000 n 
+0000030572 00000 n 
+0000048452 00000 n 
+0000048591 00000 n 
+0000068252 00000 n 
+0000068391 00000 n 
+0000080797 00000 n 
+0000080923 00000 n 
+0000081054 00000 n 
+0000081188 00000 n 
+0000081326 00000 n 
+0000081450 00000 n 
+0000081579 00000 n 
+0000081711 00000 n 
+0000081847 00000 n 
+0000081975 00000 n 
+0000082102 00000 n 
+0000082231 00000 n 
+0000082364 00000 n 
+0000082466 00000 n 
+0000082815 00000 n 
+0000082901 00000 n 
+trailer
+<<
+/Size 31
+/Root 30 0 R
+/Info 29 0 R
+/ID [ <B031E471ACFA842FCC1B476FEB79164C> <B031E471ACFA842FCC1B476FEB79164C> ]
+>>
+startxref
+83005
+%%EOF
