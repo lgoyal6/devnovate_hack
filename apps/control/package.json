@@ -1,0 +1,35 @@
+{
+  "name": "@intentguard/control",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./events": "./src/lib/events.ts",
+    "./mock-run": "./src/mock-run.ts"
+  },
+  "engines": {
+    "node": ">=22.5"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsx scripts/serve-control.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "smoke": "pnpm run build && node dist/scripts/smoke-control-core.js",
+    "smoke:mock": "pnpm run build && node dist/scripts/smoke-control.js",
+    "test": "pnpm run typecheck && pnpm run smoke"
+  },
+  "dependencies": {
+    "@intentguard/contracts": "workspace:*",
+    "@intentguard/execution": "workspace:*",
+    "@intentguard/fixture": "workspace:*",
+    "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.9.2"
+  }
+}
