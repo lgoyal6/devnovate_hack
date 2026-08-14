@@ -144,6 +144,27 @@ flowchart LR
   end
 ```
 
+### What Forge produced
+
+Everything Forge generated from the legacy service is committed under
+`forge/`: the recovered rules (`rules.json`), the Intent Document
+(`intent-document.pdf`, artifact `90e7970c-0d00-4d2e-b307-c5cb6868326d`), and
+the ForgeScore report on the legacy service (`forgescore-legacy.pdf`, 70/100,
+"Established", scored across eight dimensions).
+
+Forge wrote the parity thesis before any rewrite existed. Its Intent Document
+states that this is a behavior-preserving rewrite rather than a product
+expansion, and that legacy observed behavior is authoritative with execution
+against the legacy service determining parity.
+
+Its Risk Register then ranks, without ever seeing candidates A, B, or C, that
+approval threshold and negative-amount behavior "could be reimplemented
+incorrectly" (REQ-007, REQ-014) and that "a developer may replace legacy float
+truncation with rounded decimal arithmetic, changing settlement-visible fee
+values" (REQ-022). Those are the exact divergences the corpus is built to
+catch. Forge predicted the failure modes; IntentGuard proves by execution
+whether a given candidate committed them.
+
 ## System architecture
 
 Three owned planes share one frozen type contract. The browser never computes
@@ -186,7 +207,7 @@ flowchart TB
 | Execution | Isolated compute, security scan, verdict narration | Daytona, Snyk, RocketRide |
 | Fixture | Legacy service, candidates A/B/C, corpus generator, replay client | The four sandbox processes |
 | Contracts | Shared types only. No runtime values | Imported by every plane |
-| Forge | Recovered business rules and generated specs | Consumed as `forge/rules.json` |
+| Forge | Recovered business rules, Intent Document, ForgeScore report | Only `forge/rules.json` is read by code |
 
 Data moves between owners through `@intentguard/contracts`. A module does not
 reach into another owner's source to unblock itself.
@@ -486,7 +507,7 @@ packages/
   execution/   Daytona, Snyk, and RocketRide adapters
   fixture/     legacy service, candidates A/B/C, corpus generator, replay client
 fixtures/      pinned expected outcomes for the required approval cases
-forge/         Forge mission, recovered rules export, generated specs
+forge/         recovered rules export, Forge Intent Document, ForgeScore report
 rocketride/    narration pipeline used after the verdict is stored
 ```
 
@@ -506,9 +527,13 @@ and it must never hold a runtime value.
 
 ## Where fallbacks are and are not allowed
 
-Allowed to degrade: RocketRide narration text, ForgeScore display, cosmetic
-timeline detail, and the rules list (falls back to the committed
-`forge/rules.json` if the live Forge export fails).
+Allowed to degrade: RocketRide narration text, ForgeScore display, and
+cosmetic timeline detail.
+
+The rules are not a degradation path. `forge/rules.json` is the committed
+Forge export and the only source of rules; there is no live Forge fetch at run
+time to fall back from. An unreadable, malformed, or empty export fails the
+run at `DRAFT` rather than quietly shrinking the rule set.
 
 Never faked: sandbox creation, scan results, corpus replay, divergence
 detection, or the verdict. A candidate that cannot run renders as

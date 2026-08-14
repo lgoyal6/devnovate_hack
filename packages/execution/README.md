@@ -8,10 +8,13 @@ events through the control plane's central event writer.
 ## Lifecycle
 
 `provision` creates all requested Daytona sandboxes concurrently from the same
-snapshot. It applies identical CPU, memory, disk, TTL, timeout, and network
-settings and checks out the same immutable monorepo commit in each sandbox. A
-strict internal convention maps `legacy`, `A`, `B`, and `C` respectively to
-`packages/fixture/legacy` and `packages/fixture/candidates/{A,B,C}`. Preparation,
+snapshot. It applies identical TTL, timeout, and network settings and checks
+out the same immutable monorepo commit in each sandbox. CPU, memory, and disk
+come baked into the shared snapshot: snapshot creates take no resources field,
+so `DAYTONA_CPU`, `DAYTONA_MEMORY_GIB`, and `DAYTONA_DISK_GIB` do not size a
+sandbox created this way. A strict internal convention maps `legacy`, `A`,
+`B`, and `C` respectively to `packages/fixture/legacy` and
+`packages/fixture/candidates/{A,B,C}`. Preparation,
 Snyk, and `python3 server.py` all run from that candidate's source directory;
 Snyk runs before preparation or application start. Missing, extra, unknown, or
 cross-commit candidate targets are rejected. Partial provisioning failures are
