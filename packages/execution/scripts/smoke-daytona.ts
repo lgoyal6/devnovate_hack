@@ -21,8 +21,8 @@ try {
     labels: { application: "intentguard", runId: `${runId}-egress`, candidateId: "egress" },
     ttlMinutes: config.daytona.ttlMinutes,
     networkAllowList: config.networkAllowList,
+    resources: config.daytona.resources,
   }, config.daytona.createTimeoutSeconds);
-  await egressProbe.resize(config.daytona.resources, config.daytona.createTimeoutSeconds);
   const probes = [
     {
       name: "Python runtime",

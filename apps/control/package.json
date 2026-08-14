@@ -15,7 +15,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "dev": "tsx scripts/serve-control.ts",
+    "dev": "node --env-file=../../.env.local --import tsx scripts/serve-control.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "smoke": "pnpm run build && node dist/scripts/smoke-control-core.js",
     "smoke:mock": "pnpm run build && node dist/scripts/smoke-control.js",

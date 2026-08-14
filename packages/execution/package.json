@@ -15,9 +15,9 @@
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "smoke": "tsc -p tsconfig.json && node dist/scripts/smoke-execution.js",
-    "smoke:daytona": "tsx scripts/smoke-daytona.ts",
-    "smoke:snyk": "tsx scripts/smoke-snyk.ts",
-    "smoke:rocketride": "tsx scripts/smoke-rocketride.ts",
+    "smoke:daytona": "node --env-file=../../.env.local --import tsx scripts/smoke-daytona.ts",
+    "smoke:snyk": "node --env-file=../../.env.local --import tsx scripts/smoke-snyk.ts",
+    "smoke:rocketride": "node --env-file=../../.env.local --import tsx scripts/smoke-rocketride.ts",
     "test": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.json && node dist/scripts/smoke-execution.js"
   },
   "dependencies": {

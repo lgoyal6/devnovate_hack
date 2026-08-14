@@ -82,11 +82,12 @@ class FakeDaytona implements DaytonaPort {
       labels: Record<string, string>;
       ttlMinutes: number;
       networkAllowList: string;
+      resources: { cpu: number; memory: number; disk: number };
     },
     timeoutSeconds: number,
   ): Promise<SandboxPort> {
     const candidateId = input.labels.candidateId ?? "unknown";
-    trace.push(`create:${candidateId}:${input.snapshotId}:${String(input.ttlMinutes)}:${input.networkAllowList}:${String(timeoutSeconds)}`);
+    trace.push(`create:${candidateId}:${input.snapshotId}:${String(input.ttlMinutes)}:${input.networkAllowList}:${JSON.stringify(input.resources)}:${String(timeoutSeconds)}`);
     const output = candidateId === "B"
       ? JSON.stringify({
         diagnostic: { echoedToken: fakeSnykToken },
@@ -194,8 +195,7 @@ for (const candidateId of ["legacy", "A", "B", "C"]) {
   assert.ok(trace.includes(
     `sb-${candidateId}:start:cd -- '${sourcePath}' && exec python3 'server.py' --port 8080:30`,
   ));
-  assert.ok(trace.includes(`create:${candidateId}:snap-1:45:example.test:30`));
-  assert.ok(trace.includes(`sb-${candidateId}:resize:{"cpu":2,"memory":4,"disk":20}:30`));
+  assert.ok(trace.includes(`create:${candidateId}:snap-1:45:example.test:{"cpu":2,"memory":4,"disk":20}:30`));
   assert.ok(trace.includes(`sb-${candidateId}:preview:8080:3600`));
 }
 assert.ok(!trace.some((entry) => entry.startsWith("sb-legacy:execute:") && entry.includes(":snyk ")));
@@ -450,6 +450,18 @@ await assert.rejects(
   /Provisioning failed for 1 candidate/,
 );
 assert.ok([...failingDaytona.sandboxes.values()].every((sandbox) => sandbox.deleted.length === 1));
+
+const leakDaytona = new FakeDaytona();
+const leakRuntime = new ExecutionRuntime({
+  ...dependencies,
+  createDaytona: () => leakDaytona,
+});
+await leakRuntime.provision("run-label-discovery", ["legacy"], "snap-1");
+const leaked = new FakeSandbox("sb-leaked", JSON.stringify({ vulnerabilities: [] }));
+leakDaytona.sandboxes.set(leaked.id, leaked);
+await leakRuntime.teardown("run-label-discovery");
+assert.equal(leaked.deleted.length, 1, "teardown must delete provider sandboxes missing from local records");
+assert.ok([...leakDaytona.sandboxes.values()].every((sandbox) => sandbox.deleted.length === 1));
 
 const statuses: ScanResult["status"][] = [
   clean.status,

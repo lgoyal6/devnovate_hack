@@ -124,10 +124,10 @@ export class ExecutionRuntime {
       labels: { application: "intentguard", runId, candidateId },
       ttlMinutes: config.daytona.ttlMinutes,
       networkAllowList: config.networkAllowList,
+      resources: config.daytona.resources,
     }, config.daytona.createTimeoutSeconds);
     const record: SandboxRecord = { candidateId, snapshotId, sourceDir, sandbox };
     records.set(candidateId, record);
-    await sandbox.resize(config.daytona.resources, config.daytona.createTimeoutSeconds);
     const previewUrl = await sandbox.signedPreviewUrl(config.appPort, config.daytona.previewTtlSeconds);
     const ref: SandboxRef = {
       candidateId,
@@ -261,14 +261,15 @@ export class ExecutionRuntime {
     }
     const daytonaConfig = this.lastProvisionConfig?.daytona ?? this.dependencies.loadDaytonaConfig();
     const client = this.daytona ??= this.dependencies.createDaytona(daytonaConfig);
-    const registered = [...(this.runs.get(runId)?.values() ?? [])].map((record) => record.sandbox);
-    const sandboxes = registered.length === 0 ? [] : registered;
-    if (sandboxes.length === 0) {
-      for await (const sandbox of client.list({ application: "intentguard", runId })) sandboxes.push(sandbox);
+    const unique = new Map(
+      [...(this.runs.get(runId)?.values() ?? [])].map((record) => [record.sandbox.id, record.sandbox]),
+    );
+    for await (const sandbox of client.list({ application: "intentguard", runId })) {
+      unique.set(sandbox.id, sandbox);
     }
-    const unique = [...new Map(sandboxes.map((sandbox) => [sandbox.id, sandbox])).values()];
+    const sandboxes = [...unique.values()];
     const settled = await Promise.allSettled(
-      unique.map((sandbox) => sandbox.delete(daytonaConfig.createTimeoutSeconds)),
+      sandboxes.map((sandbox) => sandbox.delete(daytonaConfig.createTimeoutSeconds)),
     );
     const failures = settled.filter((item): item is PromiseRejectedResult => item.status === "rejected");
     if (failures.length !== 0) {
@@ -283,8 +284,8 @@ export class ExecutionRuntime {
     this.dependencies.emitEvent(runId, {
       source: "daytona",
       type: "TORN_DOWN",
-      message: `${String(unique.length)} Daytona sandbox(es) torn down.`,
-      payload: { sandboxCount: unique.length },
+      message: `${String(sandboxes.length)} Daytona sandbox(es) torn down.`,
+      payload: { sandboxCount: sandboxes.length },
     });
   }
 

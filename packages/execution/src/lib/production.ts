@@ -97,9 +97,13 @@ class DaytonaAdapter implements DaytonaPort {
       labels: Record<string, string>;
       ttlMinutes: number;
       networkAllowList: string;
+      resources: { cpu: number; memory: number; disk: number };
     },
     timeoutSeconds: number,
   ): Promise<SandboxPort> {
+    // Snapshot creates have no resources field. Passing one makes the SDK POST
+    // /sandbox/{id}/resize after create, which 404s and leaves the sandbox
+    // occupying org memory. Identical sizing comes from the shared snapshot.
     const sandbox = await this.client.create({
       name: input.name,
       snapshot: input.snapshotId,

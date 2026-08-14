@@ -30,6 +30,7 @@ export interface DaytonaPort {
       labels: Record<string, string>;
       ttlMinutes: number;
       networkAllowList: string;
+      resources: { cpu: number; memory: number; disk: number };
     },
     timeoutSeconds: number,
   ): Promise<SandboxPort>;

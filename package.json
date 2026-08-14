@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "dev:control": "pnpm --filter @intentguard/control dev",
+    "dev:control": "node --env-file=.env.local --import tsx apps/control/scripts/serve-control.ts",
     "dev:web": "pnpm --filter @intentguard/web dev",
     "test": "pnpm -r --if-present test",
     "typecheck": "tsc --noEmit -p tsconfig.workspace.json",
